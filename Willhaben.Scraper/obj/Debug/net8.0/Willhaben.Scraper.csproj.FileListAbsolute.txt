@@ -1,0 +1,15 @@
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/bin/Debug/net8.0/Willhaben.Scraper.deps.json
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/bin/Debug/net8.0/Willhaben.Scraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/bin/Debug/net8.0/Willhaben.Scraper.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/bin/Debug/net8.0/Willhaben.Domain.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/bin/Debug/net8.0/Willhaben.Domain.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.csproj.AssemblyReference.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.GeneratedMSBuildEditorConfig.editorconfig
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.AssemblyInfoInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.AssemblyInfo.cs
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.csproj.CoreCompileInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.csproj.CopyComplete
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/refint/Willhaben.Scraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/ref/Willhaben.Scraper.dll

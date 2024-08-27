@@ -1,0 +1,11 @@
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/bin/Debug/net8.0/Willhaben.Domain.deps.json
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/bin/Debug/net8.0/Willhaben.Domain.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/bin/Debug/net8.0/Willhaben.Domain.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.AssemblyInfoInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.AssemblyInfo.cs
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.csproj.CoreCompileInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/refint/Willhaben.Domain.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/ref/Willhaben.Domain.dll
