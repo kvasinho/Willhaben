@@ -15,3 +15,5 @@ Customizable Scraper: Set your search criteria and scrape relevant data from Wil
 Management Console: Easily manage and schedule multiple scraping tasks.
 Real-time Notifications: Get notified when new items or updates are found according to your search criteria.
 
+Disclaimer
+This project is for educational purposes only. The authors of this tool are not responsible for any misuse. Please use this tool responsibly.
