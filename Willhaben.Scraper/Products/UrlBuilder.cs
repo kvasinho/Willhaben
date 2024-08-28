@@ -11,6 +11,8 @@ public class UrlBuilder
 
     public List<Keyword> Keywords { get; private set; } = new List<Keyword>();
 
+    public List<Location> Locations { get; private set; } = new List<Location>();
+
     public PriceRange PriceRange { get; set; } = new PriceRange();
     public Category Category { get; set; } = new Category();
 

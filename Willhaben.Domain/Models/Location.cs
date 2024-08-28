@@ -1,4 +1,5 @@
 using Willhaben.Domain.Exceptions;
+using Willhaben.Domain.Models;
 
 namespace Willhaben.Domain.Models
 {
@@ -35,6 +36,7 @@ namespace Willhaben.Domain.Models
         {
             Value = value; // This will use the setter and validate the input
         }
+        
 
         public static Dictionary<string, int> Locations = new Dictionary<string, int>
         {
@@ -109,8 +111,45 @@ namespace Willhaben.Domain.Models
                 { "22", 117244 },
                 { "23", 117245 },
             { "andere", 22000 }
-            
         };
-    }
+        
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Location);
+        }
 
+        public bool Equals(Location other)
+        {
+            return other != null && Code == other.Code;
+        }
+
+        public override int GetHashCode()
+        {
+            return Code.GetHashCode();
+        }
+
+        public static void AddLocation(ICollection<Location> locations, Location location)
+        {
+            if (locations == null)
+                throw new ArgumentNullException(nameof(locations));
+
+            if (location == null)
+                throw new ArgumentNullException(nameof(location));
+
+            if (locations.Any(l => l.Value == location.Value))
+            {
+                throw new LocationExistsException(location.Value);
+            }
+            locations.Add(location);
+        }
+
+        public static void AddLocations(ICollection<Location> locations, ICollection<Location> toAdd)
+        {
+            foreach (var location in toAdd)
+            {
+                Location.AddLocation(locations,location);
+            }
+        }
+    }
 }
+

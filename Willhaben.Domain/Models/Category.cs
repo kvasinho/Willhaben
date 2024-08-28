@@ -17,7 +17,7 @@ public class Category
             }
             else
             {
-                throw new InvalidCategoryException(value is null ? value : "");
+                throw new InvalidCategoryException(value ?? "");
             }
         }
     }

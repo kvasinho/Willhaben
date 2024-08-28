@@ -16,4 +16,15 @@ namespace Willhaben.Domain.Exceptions
         public LocationExistsException(string location) 
             : base($"Location '{location}' already exists") { }
     }
+    public class LocationParentExistsException : LocationException
+    {
+        public LocationParentExistsException(string location) 
+            : base($"The region of {location} exists already") { }
+    }
+    public class LocationChildExistsException : LocationException
+    {
+        public LocationChildExistsException(string location) 
+            : base($"There is already a specific location in this region: {location}") { }
+    }
+    
 }
