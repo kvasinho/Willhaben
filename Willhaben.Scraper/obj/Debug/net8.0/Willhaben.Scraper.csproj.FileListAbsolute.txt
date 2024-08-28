@@ -13,3 +13,4 @@
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/refint/Willhaben.Scraper.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.pdb
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/ref/Willhaben.Scraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Scraper/obj/Debug/net8.0/Willhaben.Scraper.sourcelink.json

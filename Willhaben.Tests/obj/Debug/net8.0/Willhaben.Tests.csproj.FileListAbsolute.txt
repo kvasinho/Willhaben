@@ -101,3 +101,4 @@
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Tests/obj/Debug/net8.0/Willhaben.Tests.pdb
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Tests/obj/Debug/net8.0/Willhaben.Tests.genruntimeconfig.cache
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Tests/obj/Debug/net8.0/ref/Willhaben.Tests.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Tests/obj/Debug/net8.0/Willhaben.Tests.sourcelink.json

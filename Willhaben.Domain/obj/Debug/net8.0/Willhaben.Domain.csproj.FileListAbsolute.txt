@@ -9,3 +9,4 @@
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/refint/Willhaben.Domain.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.pdb
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/ref/Willhaben.Domain.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Domain/obj/Debug/net8.0/Willhaben.Domain.sourcelink.json
