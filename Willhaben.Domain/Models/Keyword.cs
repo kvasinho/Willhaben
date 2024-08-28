@@ -36,14 +36,19 @@ public class Keyword
             _isExactKeyword = value;
         }
     }
-    private string _term { get; set; }
-    public string Term
+    private string _value { get; set; }
+    public string Value
     {
-        get => _term;
+        get => ToString();
         set
         {
+            if (value is null)
+            {
+                throw new KeywordTooShortException();
+            }
+            value = value.Trim().ToLower();
             Validate(value);
-            _term = value;
+            _value = value;
         }
     }
 
@@ -54,7 +59,7 @@ public class Keyword
             throw new OmitAndExactException();
         }
 
-        Term = term;
+        Value = term;
         IsOmitKeyword = isOmitKeyword;
         IsExactKeyword = isExactKeyword;
     }
@@ -82,7 +87,6 @@ public class Keyword
         }
         
     }
-    
 
     public static bool HasOnlyValidChars(string keyword)
     {
@@ -101,19 +105,23 @@ public class Keyword
     {
         if (IsExactKeyword)
         {
-            return $"%22{_term}%22"; 
+            return $"%22{_value}%22"; 
         }
         if (IsOmitKeyword)
         {
-            return $"-{_term}"; 
+            return $"-{_value}"; 
         }
-        return _term;
+        return _value;
     }
     
     public static string DisplayKeywordList(IEnumerable<Keyword> keywords)
     {
+        if (keywords.Count() == 0)
+        {
+            return String.Empty;
+        }
         var keywordStrings = keywords
-            .Select(keyword => keyword.ToString())
+            .Select(keyword => keyword.Value)
             .Where(str => !string.IsNullOrEmpty(str))
             .ToList();
 
@@ -124,7 +132,7 @@ public class Keyword
     {
         if (obj is Keyword other)
         {
-            return _term == other._term &&
+            return _value == other._value &&
                    IsOmitKeyword == other.IsOmitKeyword &&
                    IsExactKeyword == other.IsExactKeyword;
         }
@@ -134,7 +142,7 @@ public class Keyword
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(_term, IsOmitKeyword, IsExactKeyword);
+        return HashCode.Combine(_value, IsOmitKeyword, IsExactKeyword);
     }
 
     public static bool operator ==(Keyword left, Keyword right)

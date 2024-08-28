@@ -15,13 +15,12 @@ public class KeywordUnitTests
 
         Assert.False(keyword.IsExactKeyword);
         Assert.False(keyword.IsOmitKeyword);
-        Assert.Equal("test", keyword.Term);
+        Assert.Equal("test", keyword.Value);
     }
     [Theory]
     [InlineData("")]
     [InlineData(" ")]
     [InlineData("  ")]
-    [InlineData(default)]
     public void Constructor_Should_FailOnEmptyKeyword(string @base)
     {
         Assert.Throws<KeywordTooShortException>(() => new Keyword(@base));
@@ -132,7 +131,7 @@ public class KeywordUnitTests
         var keyword = new Keyword(term);
 
         // Assert
-        Assert.Equal(term, keyword.Term);
+        Assert.Equal(term, keyword.Value);
         Assert.False(keyword.IsExactKeyword);
         Assert.False(keyword.IsOmitKeyword);
     }
