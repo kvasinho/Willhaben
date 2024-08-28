@@ -4,7 +4,7 @@ public class Location
 {
     
 }
-
+/*
 var regions =
 {
     "Burgenland": 1,
@@ -23,3 +23,4 @@ var locations =
     "Oberwart": 108,
     "Rust": 109
 }
+*/
