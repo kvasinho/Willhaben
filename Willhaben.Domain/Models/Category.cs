@@ -1,6 +1,10 @@
 using Willhaben.Domain.Exceptions;
+using System.Collections.Generic;
+
 
 namespace Willhaben.Domain.Models;
+
+
 
 public class Category
 {

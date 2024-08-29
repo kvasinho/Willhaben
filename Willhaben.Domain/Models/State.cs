@@ -2,54 +2,36 @@ using Willhaben.Domain.Exceptions;
 
 namespace Willhaben.Domain.Models;
 
-public class State
+public class State: AbstractCodedEnumBaseClass<StateType>
 {
-    public Zustand Value { get; set; }
+    
 
-    public int Code
+    public State(StateType value) : base(value)
     {
-        get
-        {
-            if(Codes.TryGetValue(Value, out int val))
-            {
-                return val;
-            }
-
-            throw new StateException($"There is no code assigned to this State");
-        }
     }
 
-    public static Dictionary<Zustand, int> Codes = new Dictionary<Zustand, int>
+    public override StateType Value { get; set; }
+    protected override Exception KeyNotFoundException(StateType value)
     {
-        { Zustand.NEU , 22},
-        { Zustand.NEUWERTIG ,2546},
-        { Zustand.GENERALÜBERHOLT ,5013256},
-        { Zustand.GEBRAUCHT ,23},
-        { Zustand.DEFEKT ,24},
-        { Zustand.AUSSTELLUNGSSTÜCK ,2539}
-    };
-
-    public State(Zustand zustand)
-    {
-        Value = zustand;
+        throw new InvalidStateException(value);
     }
-
-    public static void AddZustand(IList<State> states, Zustand state)
+    
+    public static void AddZustand(IList<State> states, StateType state)
     {
-        if (states.Any(s => s.Equals(state)))
+        if (states.Any(s => s.Value == state))
         {
             throw new StateExistsException(state);
         }
         states.Add(new State(state));
     }
+}
 
-    public enum Zustand
-    {
-        NEU,
-        NEUWERTIG,
-        GENERALÜBERHOLT,
-        GEBRAUCHT,
-        DEFEKT,
-        AUSSTELLUNGSSTÜCK,
-    }
+public enum StateType
+{
+    NEU = 22,
+    NEUWERTIG = 2546,
+    GENERALÜBERHOLT = 5013256,
+    GEBRAUCHT = 23,
+    DEFEKT = 24,
+    AUSSTELLUNGSSTÜCK = 2539,
 }

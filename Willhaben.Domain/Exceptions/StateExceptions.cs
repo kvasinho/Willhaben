@@ -6,10 +6,15 @@ namespace Willhaben.Domain.Exceptions
     {
         public StateException(string message) : base(message) { }
     }
+    public class InvalidStateException : StateException
+    {
+        public InvalidStateException(StateType state) 
+            : base($"State '{state}' is invalid") { }
+    }
 
     public class StateExistsException(string message) : KeywordException(message)
     {
 
-        public StateExistsException(State.Zustand zustand) : this($"{zustand.ToString()} already exists.") { }
+        public StateExistsException(StateType state) : this($"{state.ToString()} already exists.") { }
     }
 }
