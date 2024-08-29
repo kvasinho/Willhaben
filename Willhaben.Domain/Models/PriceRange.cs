@@ -28,4 +28,10 @@ public class PriceRange
 
         PriceTo = priceTo;
     }
+
+    public void SetAsGiveAway()
+    {
+        PriceTo = 0;
+        PriceFrom = 0;
+    }
 }
