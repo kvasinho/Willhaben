@@ -12,6 +12,11 @@ namespace Willhaben.Domain.Exceptions
         public InvalidCharacterException() : this(DefaultMessage) { }
     }
 
+    public class KeywordExistsException : KeywordException
+    {
+        public KeywordExistsException(string keyword) : base($"{keyword} was already added"){}
+    }
+
     public class MultipleWordException(string message) : KeywordException(message)
     {
         private const string DefaultMessage = "Keyword consists of multiple words. You may only separate words by -";

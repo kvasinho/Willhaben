@@ -1,0 +1,50 @@
+{
+"settings":{
+  "type": "willhaben",
+  "interval": "M1",
+  "days": [ 
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Saturday"
+  ],
+  "from": "08:00:00", 
+  "to": "20:00:00" ,
+  "keywords": {
+    "fuzzy": ["hi"],
+    "exact": ["there"],
+    "omit": ["world"]
+  }
+}
+  /*
+  "priceSettings": {
+    "onlyGiveaway": false,
+    "from": null,
+    "to": null
+  },
+  "category": "angeljagd",
+  "paylivery": false,
+  "handover": null,
+  "seller": null,
+  "locations": [
+    "BURGENLAND",
+    "EISENSTADT",
+    "RUST",
+    "EISENSTADT_UMGEBUNG",
+    "GUESSING",
+    "JENNERSDORF",
+    "MATTERSBURG",
+    "NEUSIEDL",
+    "OBERPULLENDORF",
+    "OBERWART"
+  ],
+  "states": [
+    "NEU",
+    "NEUWERTIG",
+    "GENERALÜBERHOLT",
+    "GEBRAUCHT",
+    "DEFEKT",
+    "AUSSTELLUNGSSTÜCK"
+  ]
+  */
+}

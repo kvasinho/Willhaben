@@ -29,6 +29,42 @@ public class PriceRange
         PriceTo = priceTo;
     }
 
+    public bool IsValidPriceFrom(int priceFrom)
+    {
+        Console.WriteLine("tttttt");
+
+        if (priceFrom < 0 | PriceFrom.HasValue)
+        {
+            Console.WriteLine("false");
+            return false;
+        }
+
+        if (PriceTo.HasValue & PriceTo < priceFrom)
+        {
+            Console.WriteLine("false2");
+
+            return false;
+        }
+        Console.WriteLine("true");
+
+        return true;
+    }
+
+    public bool IsValidPriceTo(int priceTo)
+    {
+        if (priceTo < 0 | PriceTo is not null)
+        {
+            return false;
+        }
+
+        if (PriceFrom.HasValue & PriceFrom > priceTo)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public void SetAsGiveAway()
     {
         PriceTo = 0;

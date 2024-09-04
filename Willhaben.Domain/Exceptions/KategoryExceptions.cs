@@ -10,5 +10,6 @@ namespace Willhaben.Domain.Exceptions
         public InvalidCategoryException(string? category) 
             : base($"Category '{category}' is invalid") { }
     }
-
+    
+    
 }

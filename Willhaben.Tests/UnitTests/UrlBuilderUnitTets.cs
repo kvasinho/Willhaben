@@ -1,4 +1,5 @@
 using Willhaben.Domain.Exceptions;
+using Willhaben.Domain.Models;
 using Willhaben.Scraper.Products;
 using Xunit.Abstractions;
 
@@ -20,6 +21,7 @@ public class UrlBuilderUnitTets
     {
         // Arrange
         var builder = new UrlBuilder(SfId);
+        _output.WriteLine(builder.Url);
         // Assert
         Assert.Equal($"https://www.willhaben.at/webapi/iad/search/atz/seo/kaufen-und-verkaufen/marktplatz?sfId={SfId}&rows={builder.Rows}&isNavigation=true&keyword=",builder.Url);
     }
@@ -119,6 +121,31 @@ public class UrlBuilderUnitTets
             Assert.ThrowsAny<KeywordException>(() => builder.AddOmitKeyword(@base));
         }
     }
+    
+    [Fact] 
+    public void UrlBuilder_Should_HandleEnumSettersl()
+    {
+        // Arrange
+        //locations,+
+        //handover,+
+        //Seller, +
+        //States,+
+        //Paylivery+
+
+        var builder = new UrlBuilder(SfId);
+        builder
+            .AddLocation(LocationType.IMST)
+            .AddLocation(LocationType.RUST)
+            .AddState(StateType.NEU)
+            .AddState(StateType.DEFEKT)
+            .OnlyPaylivery()
+            .OnlyPrivateSellers()
+            .OnlySelfCollection();
+        _output.WriteLine(builder.Url);
+        // Assert
+        Assert.Equal($"https://www.willhaben.at/webapi/iad/search/atz/seo/kaufen-und-verkaufen/marktplatz?sfId={SfId}&rows={builder.Rows}&isNavigation=true&keyword=",builder.Url);
+    }
+    
     
 
 }

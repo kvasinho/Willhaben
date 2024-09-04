@@ -1,0 +1,132 @@
+{
+  "settings": {
+    "interval": "5m",
+    "days": {
+      "Monday": {
+        "from": "06:00",
+        "to": "20:00"
+      },
+      "Tuesday": {
+        "from": "06:00",
+        "to": "20:00"
+      },
+      "Wednesday": {
+        "from": "06:00",
+        "to": "20:00"
+      },
+      "Thursday": {
+        "from": "06:00",
+        "to": "20:00"
+      },
+      "Friday": {
+        "from": "06:00",
+        "to": "20:00"
+      },
+      "Saturday": {
+        "from": "08:00",
+        "to": "18:00"
+      },
+      "Sunday": {
+        "from": "08:00",
+        "to": "18:00"
+      }
+    }
+  },
+  "keywords": {
+    "fuzzy": [],
+    "exact": [],
+    "omit": []
+  },
+  "price": {
+    "onlyGiveaway": false,
+    "from": null,
+    "to": null
+  },
+  "paylivery": false,
+  "handover": null,
+  "seller": null, 
+  "locations": {
+    "BURGENLAND": false,
+      "EISENSTADT": false,
+      "RUST": false,
+      "EISENSTADT_UMGEBUNG": false,
+      "GUESSING": false,
+      "JENNERSDORF": false,
+      "MATTERSBURG": false,
+      "NEUSIEDL": false,
+      "OBERPULLENDORF": false,
+      "OBERWART": false,
+    "KAERNTEN": false,
+      "KLAGENFURT": false,
+      "VILLACH": false,
+      "FELDKIRCHEN": false,
+      "KLAGENFURT_LAND": false,
+      "SANKT_VEIT": false,
+      "SPITTAL": false,
+      "VILLACH_LAND": false,
+      "VOELKERMARKT": false,
+      "WOLFSBERG": false,
+      "HERMAGOR": false,
+    "NIEDEROESTERREICH": false,
+    "OBEROESTERREICH": false,
+    "SALZBURG": false,
+      "SALZBURG_STADT": false,
+      "HALLEIN": false,
+      "SALZBURG_UMGEBUNG": false,
+      "ST_JOHANN": false,
+      "TAMSWEG": false,
+      "ZELL_AM_SEE": false,
+      "STEIERMARK": false,
+      "TIROL": false,
+      "INNSBRUCK": false,
+      "IMST": false,
+      "INNSBRUCK_LAND": false,
+      "KITZBUEHEL": false,
+      "KUFSTEIN": false,
+      "LANDECK": false,
+      "LIENZ": false,
+      "REUTTE": false,
+      "SCHWAZ": false,
+    "VORARLBERG": false,
+      "BLUDENZ": false,
+      "BREGENZ": false,
+      "DORNBIRN": false,
+      "FELDKIRCH": false,
+    "WIEN": false,
+      "WIEN_01": false,
+      "WIEN_02": false,
+      "WIEN_03": false,
+      "WIEN_04": false,
+      "WIEN_05": false,
+      "WIEN_06": false,
+      "WIEN_07": false,
+      "WIEN_08": false,
+      "WIEN_09": false,
+      "WIEN_10": false,
+      "WIEN_11": false,
+      "WIEN_12": false,
+      "WIEN_13": false,
+      "WIEN_14": false,
+      "WIEN_15": false,
+      "WIEN_16": false,
+      "WIEN_17": false,
+      "WIEN_18": false,
+      "WIEN_19": false,
+      "WIEN_20": false,
+      "WIEN_21": false,
+      "WIEN_22": false,
+      "WIEN_23": false,
+    "ANDERE": false
+  },
+  "states": {
+    "NEU": true,
+    "NEUWERTIG": true,
+    "GENERALÜBERHOLT": true,
+    "GEBRAUCHT": true,
+    "DEFEKT": true,
+    "AUSSTELLUNGSSTÜCK": true
+  }
+  
+
+  
+}
