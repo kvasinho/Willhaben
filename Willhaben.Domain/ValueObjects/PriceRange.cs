@@ -31,21 +31,17 @@ public class PriceRange
 
     public bool IsValidPriceFrom(int priceFrom)
     {
-        Console.WriteLine("tttttt");
 
         if (priceFrom < 0 | PriceFrom.HasValue)
         {
-            Console.WriteLine("false");
             return false;
         }
 
         if (PriceTo.HasValue & PriceTo < priceFrom)
         {
-            Console.WriteLine("false2");
 
             return false;
         }
-        Console.WriteLine("true");
 
         return true;
     }

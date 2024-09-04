@@ -31,8 +31,14 @@ namespace Willhaben.Domain.Models
         }
 
         // Abstract methods to be implemented in derived classes
-        public abstract IReadOnlyList<Tenum> Simplyfy(IEnumerable<Tenum> values);
-        public abstract IReadOnlyList<Tenum> Expand(IEnumerable<Tenum> simplifiedValues);
+        public virtual IReadOnlyList<Tenum> Simplyfy(IEnumerable<Tenum> values)
+        {
+            return values.ContainsAllEnumValues() ? new List<Tenum>() : Values;
+        }
+        public virtual IReadOnlyList<Tenum> Expand(IEnumerable<Tenum> values)
+        {
+            return values.Any() ? EnumExtensions.GetAllValues<Tenum>() : Values;
+        }
 
         public void AddUnique(Tenum value)
         {
@@ -83,6 +89,8 @@ namespace Willhaben.Domain.Models
             }
         }
 
+
+
         public  Tenum[] ToArray()
         {
             return SimplifiedValues.ToArray();
@@ -95,6 +103,7 @@ namespace Willhaben.Domain.Models
 
     public class StateCollection: SimplifyableEnumCollection<State>
     {
+        /*
         public override IReadOnlyList<State> Simplyfy(IEnumerable<State> values)
         {
             return values.ContainsAllEnumValues() ? new List<State>() : Values;
@@ -103,6 +112,21 @@ namespace Willhaben.Domain.Models
         {
             return values.Any() ? EnumExtensions.GetAllValues<State>() : Values;
         }
+        */
+    }
+    
+    public class DayOfWeekCollection: SimplifyableEnumCollection<DayOfWeek>
+    {
+        /*
+        public override IReadOnlyList<DayOfWeek> Simplyfy(IEnumerable<DayOfWeek> values)
+        {
+            return values.ContainsAllEnumValues() ? new List<DayOfWeek>() : Values;
+        }
+        public override IReadOnlyList<DayOfWeek> Expand(IEnumerable<DayOfWeek> values)
+        {
+            return values.Any() ? EnumExtensions.GetAllValues<DayOfWeek>() : Values;
+        }
+        */
     }
 
     public class LocationCollection : SimplifyableEnumCollection<Location>
@@ -112,83 +136,83 @@ namespace Willhaben.Domain.Models
             var simplifiedValeus = new List<Location>();
             if (values.ContainsAllEnumValuesFromRange(117223, 117245))
             {
-                simplifiedValeus.AddRange(117223, 117245);
+                simplifiedValeus.Add(Location.WIEN);
             }
             else
             {
-                simplifiedValeus.Add(Location.WIEN);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(117223,117245));
             }
             
             if (values.ContainsAllEnumValuesFromRange(100, 199))
             {
-                simplifiedValeus.AddRange(100, 199);
+                simplifiedValeus.Add(Location.BURGENLAND);
             }
             else
             {
-                simplifiedValeus.Add(Location.BURGENLAND);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(100,199));
             }
             
             if (values.ContainsAllEnumValuesFromRange(200, 299))
             {
-                simplifiedValeus.AddRange(200, 299);
+                simplifiedValeus.Add(Location.KAERNTEN);
             }
             else
             {
-                simplifiedValeus.Add(Location.KAERNTEN);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(200,299));
             }
             
             if (values.ContainsAllEnumValuesFromRange(300, 399))
             {
-                simplifiedValeus.AddRange(300, 399);
+                simplifiedValeus.Add(Location.NIEDEROESTERREICH);
             }
             else
             {
-                simplifiedValeus.Add(Location.NIEDEROESTERREICH);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(300,399));
             }
             
             if (values.ContainsAllEnumValuesFromRange(400, 499))
             {
-                simplifiedValeus.AddRange(400, 499);
+                simplifiedValeus.Add(Location.OBEROESTERREICH);
             }
             else
             {
-                simplifiedValeus.Add(Location.OBEROESTERREICH);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(400,499));
             }
             
             if (values.ContainsAllEnumValuesFromRange(500, 599))
             {
-                simplifiedValeus.AddRange(500, 599);
+                simplifiedValeus.Add(Location.SALZBURG);
             }
             else
             {
-                simplifiedValeus.Add(Location.SALZBURG);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(500,599));
             }
             
             if (values.ContainsAllEnumValuesFromRange(600, 699))
             {
-                simplifiedValeus.AddRange(600, 699);
+                simplifiedValeus.Add(Location.STEIERMARK);
             }
             else
             {
-                simplifiedValeus.Add(Location.STEIERMARK);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(600,699));
             }
             
             if (values.ContainsAllEnumValuesFromRange(700, 799))
             {
-                simplifiedValeus.AddRange(1700, 799);
+                simplifiedValeus.Add(Location.TIROL);
             }
             else
             {
-                simplifiedValeus.Add(Location.TIROL);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(700,799));
             }
             
             if (values.ContainsAllEnumValuesFromRange(800, 899))
             {
-                simplifiedValeus.AddRange(800, 899);
+                simplifiedValeus.Add(Location.VORARLBERG);
             }
             else
             {
-                simplifiedValeus.Add(Location.VORARLBERG);
+                simplifiedValeus.AddRange(values.GetAllValuesBetween(800,899));
             }
 
             return simplifiedValeus;
@@ -200,41 +224,63 @@ namespace Willhaben.Domain.Models
             var expanded = new List<Location>();
             if (simplifiedValues.Contains(Location.WIEN))
             {
-                expanded.AddRange<Location>(117223,117245);
+                expanded.AddRange(117223,117245);
+                simplifiedValues.Remove(Location.WIEN);
             }
 
             if (simplifiedValues.Contains(Location.BURGENLAND))
             {
                 expanded.AddRange(100,199);
+                simplifiedValues.Remove(Location.BURGENLAND);
+
             }
 
             if (simplifiedValues.Contains(Location.KAERNTEN))
             {
                 expanded.AddRange(200,299);
+                simplifiedValues.Remove(Location.KAERNTEN);
+
             }
             if (simplifiedValues.Contains(Location.NIEDEROESTERREICH))
             {
                 expanded.AddRange(300,399);
+                simplifiedValues.Remove(Location.NIEDEROESTERREICH);
+
             }
             if (simplifiedValues.Contains(Location.OBEROESTERREICH))
             {
                 expanded.AddRange(400,499);
+                simplifiedValues.Remove(Location.OBEROESTERREICH);
+
             }
             if (simplifiedValues.Contains(Location.SALZBURG))
             {
                 expanded.AddRange(500,599);
+                simplifiedValues.Remove(Location.SALZBURG);
+
             }            
             if (simplifiedValues.Contains(Location.STEIERMARK))
             {
                 expanded.AddRange(600,699);
+                simplifiedValues.Remove(Location.STEIERMARK);
+
             }
             if (simplifiedValues.Contains(Location.TIROL))
             {
                 expanded.AddRange(700,799);
+                simplifiedValues.Remove(Location.TIROL);
+
             }
             if (simplifiedValues.Contains(Location.VORARLBERG))
             {
                 expanded.AddRange(800,899);
+                simplifiedValues.Remove(Location.VORARLBERG);
+
+            }
+            
+            foreach (var location in simplifiedValues)
+            {
+                expanded.AddUniqueIgnoreDuplicates(location);
             }
 
             return expanded;

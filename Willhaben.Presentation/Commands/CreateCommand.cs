@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.Reflection;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -104,14 +105,15 @@ public class CreateCommand : Command<CreateCommand.Settings>
         public LocationCollection Locations { get; set; } = new LocationCollection();
 
         [CommandOption("--location")]
-        public Location[]? SelectedLocations
+        [DefaultValue(new Location[]{})]
+        public Location[] SelectedLocations
         {
             get => Locations.ToArray();
             set
             {
                 try
                 {
-                    if (value is not null)
+                    if (value is not null && value.Length > 0)
                     {
                         Locations.FromArray(value);
                         SelectedLocations = value;
@@ -127,19 +129,48 @@ public class CreateCommand : Command<CreateCommand.Settings>
 
 
         public StateCollection States { get; set; } = new StateCollection();
+        [DefaultValue(new State[]{})]
 
         [CommandOption("--states")]
-        public State[]? SelectedStates
+        public State[] SelectedStates
         {
             get => States.ToArray();
             set
             {
                 try
                 {
-                    if (value is not null)
+                    if (value is not null && value.Length > 0)
                     {
                         States.FromArray(value);
                         SelectedStates = value;
+                    }
+
+                }
+                catch (KeywordException ex)
+                {
+                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
+                }
+            }
+        }
+        
+        public DayOfWeekCollection Days { get; set; } = new DayOfWeekCollection();
+
+        [CommandOption("--days")]
+        [DefaultValue(new DayOfWeek[]{})]
+        public DayOfWeek[] SelectedDays
+        {
+            get => Days.ToArray();
+            set
+            {
+                try
+                {
+                    Console.WriteLine($"Value1:{value}");
+
+                    if (value is not null && value.Length > 0)
+                    {
+                        Console.WriteLine($"Value:{value}");
+                        Days.FromArray(value);
+                        SelectedDays = value;
                     }
 
                 }
@@ -155,6 +186,22 @@ public class CreateCommand : Command<CreateCommand.Settings>
         
         [CommandOption("--handover")]
         public Handover? Handover { get; set; }
+        
+        
+        public TimeRange Time { get; set; } = new TimeRange();
+        [CommandOption("--time-from")]
+        public TimeOnly? TimeFrom
+        {
+            get => Time.From != TimeOnly.MinValue ? Time.From : (TimeOnly?)null;
+            set => Time.From = value ?? TimeOnly.MinValue; 
+        }
+
+        public TimeOnly? TimeTo
+        {
+            get => Time.To != TimeOnly.MaxValue ? Time.To : (TimeOnly?)null;
+            set => Time.To = value ?? TimeOnly.MaxValue; 
+        }
+
         
 
         public enum ScraperType
@@ -216,7 +263,14 @@ public class CreateCommand : Command<CreateCommand.Settings>
         public List<State> States { get; set; } = new List<State>();
         public Seller Seller { get; set; }
         public Handover Handover { get; set; }
+
+        [JsonConverter(typeof(SimplifyableEnumCollectionConverter<DayOfWeek, DayOfWeekCollection>))]
+        public DayOfWeekCollection Days { get; set; } = new DayOfWeekCollection();
+
+        public TimeRange TimeRange { get; set; } = new TimeRange();
     }
+
+
     public  override int Execute(CommandContext context, Settings settings)
     {
         JsonSettings jsonSettings = new JsonSettings();
@@ -267,8 +321,8 @@ public class CreateCommand : Command<CreateCommand.Settings>
         }
         AnsiConsole.MarkupLine($"{settings.SelectedLocations is null}");
         AnsiConsole.MarkupLine("333");
-
-        if (settings.SelectedLocations is not null)
+        
+        if (settings.SelectedLocations.Length > 0)
         {
             AnsiConsole.MarkupLine("123");
             jsonSettings.Locations = settings.Locations.ToList();
@@ -280,7 +334,7 @@ public class CreateCommand : Command<CreateCommand.Settings>
             jsonSettings.Locations = PromptForLocations().ToList();
         }
         
-        if (settings.SelectedStates is not null)
+        if (settings.SelectedStates.Length > 0)
         {
             jsonSettings.States = settings.States.ToList();
         }
@@ -292,6 +346,21 @@ public class CreateCommand : Command<CreateCommand.Settings>
         jsonSettings.PayliveryOnly = settings.PayliveryOnly ?? PromptForPaylivery();
         jsonSettings.Seller = settings.Seller ?? PromptForSeller();
         jsonSettings.Handover = settings.Handover ?? PromptForHandover();
+        
+        if (settings.SelectedDays.Length > 0)
+        {
+
+            jsonSettings.Days.FromArray(settings.SelectedDays);
+        }
+        else
+        {
+
+            jsonSettings.Days = PromptForDays();
+        }
+
+        jsonSettings.TimeRange.From = settings.Time.From ?? PromptForTime("At what time should the scraper start:", TimeOnly.MinValue, settings.Time.IsValidTimeFrom);
+        
+        
 
         var options = new JsonSerializerOptions
         {
@@ -299,8 +368,6 @@ public class CreateCommand : Command<CreateCommand.Settings>
         };
         using FileStream createStream = File.Create(@$"./Scrapers/{jsonSettings.Filename}.json");
         JsonSerializer.Serialize(createStream,jsonSettings, options);
-
-
 
         
         return 0;
@@ -316,6 +383,9 @@ public class CreateCommand : Command<CreateCommand.Settings>
                 .MoreChoicesText("[grey](Move up and down to reveal more scrapers)[/]")
                 .AddChoices(Settings.ScraperType.WILLHABEN, Settings.ScraperType.EBAY, Settings.ScraperType.CUSTOM));
     }
+    
+
+    
     private bool PromptForConfirmation(string prompt)
     {
         var choice =  AnsiConsole.Prompt(
@@ -554,6 +624,33 @@ public class CreateCommand : Command<CreateCommand.Settings>
         return choice;
     }
 
+    private TimeOnly PromptForTime(string prompt, TimeOnly defaultValue, Func<TimeOnly, bool> validation)
+    {
+        while (true)
+        {
+            var input = AnsiConsole.Prompt(
+                new TextPrompt<string>(prompt)
+                    .AllowEmpty()
+                    .PromptStyle("green")
+            );
+
+            if (string.IsNullOrWhiteSpace(input))
+            {
+                return defaultValue;
+            }
+
+            if (TimeOnly.TryParse(input, out TimeOnly result))
+            {
+                if (validation(result))
+                {
+                    return result;
+                }
+            }
+
+            AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid time in the format: HH:mm.[/]");
+        }
+    }
+
     private bool PromptForPaylivery()
     {
         var choice =  AnsiConsole.Prompt(
@@ -583,7 +680,28 @@ public class CreateCommand : Command<CreateCommand.Settings>
         collection.FromList(AnsiConsole.Prompt(prompt));
         return collection;
     }
-    
+    private DayOfWeekCollection PromptForDays()
+    {
+        var prompt = new MultiSelectionPrompt<DayOfWeek>()
+            .Title("Select Days")
+            .PageSize(50)
+            .NotRequired()
+            .InstructionsText("[grey](Press [yellow]<space>[/] to toggle a state, [green]<enter>[/] to accept. If no state is selected, the scraper will look for any state)[/]")
+            .AddChoices(new List<DayOfWeek>
+            {
+                DayOfWeek.Monday,
+                DayOfWeek.Tuesday,
+                DayOfWeek.Wednesday,
+                DayOfWeek.Thursday,
+                DayOfWeek.Friday,
+                DayOfWeek.Saturday,
+                DayOfWeek.Sunday,
+
+            });
+        var collection = new DayOfWeekCollection();
+        collection.FromList(AnsiConsole.Prompt(prompt));
+        return collection;
+    }
     private List<TKeyword> PromptForKeywords<TKeyword>(string keywordType) where TKeyword : Keyword
     {
         while (true)

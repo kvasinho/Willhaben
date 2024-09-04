@@ -17,6 +17,16 @@ public static class EnumExtensions
         }
         collection.Add(value);
     }
+    public static void AddUniqueIgnoreDuplicates<TEnum>(this ICollection<TEnum> collection, TEnum value) where TEnum: Enum
+    {
+        ArgumentNullException.ThrowIfNull(collection);
+        ArgumentNullException.ThrowIfNull(value);
+
+        if (!collection.Any(c => c.Equals(value)))
+        {
+            collection.Add(value);
+        }
+    }
     public static List<T> GetAllValues<T>() where T : Enum
     {
         return Enum.GetValues(typeof(T)).Cast<T>().ToList();
@@ -31,11 +41,45 @@ public static class EnumExtensions
     {
         return Enum.GetValues(typeof(T)).Cast<T>().Where(val => val.GetValue() >= from & val.GetValue() <= to).ToList();
     }
+    
+
+    public static List<T> GetAllValuesBetween<T>(this IEnumerable<T> values, int from, int to) where T : Enum
+    {
+        // Ensure the range is valid
+        if (from > to)
+        {
+            throw new ArgumentException("The 'from' value must be less than or equal to the 'to' value.");
+        }
+
+        return values
+            .Where(v => Convert.ToInt32(v) >= from && Convert.ToInt32(v) <= to)
+            .ToList();
+    }
     public static bool ContainsAllEnumValuesFromRange<T>(this IEnumerable<T> list, int from, int to) where T : Enum
     {
         var allValuesInRange = GetAllValuesBetween<T>(from, to);
         return !allValuesInRange.Except(list).Any();
     }
+    public static bool Remove<T>(this List<T> list, T value) where T : Enum
+    {
+        if (list == null)
+        {
+            throw new ArgumentNullException(nameof(list));
+        }
+
+        return list.Remove(value);
+    }
+    public static void Remove<T>(this IEnumerable<T> list, T value) where T : Enum
+    {
+        if (list == null)
+        {
+            throw new ArgumentNullException(nameof(list));
+        }
+
+        // Attempt to remove the item
+        list.Remove(value);
+    }
+    
     public static void AddRange<TEnum>(this ICollection<TEnum> collection, int from, int to) where TEnum : Enum
     {
         ArgumentNullException.ThrowIfNull(collection);
