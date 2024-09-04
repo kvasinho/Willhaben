@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "eBeoqSBl9CTRoNxOqxOAv3N+B4uG0D11Ja1LdMEfH3w0O6uiX00yFvSckGHAnwBr81U83VMJlSWiH+eCEC1Haw==",
+  "success": true,
+  "projectFilePath": "/Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/Willhaben.Presentation.csproj",
+  "expectedPackageFiles": [
+    "/Users/michaelkvasin/.nuget/packages/spectre.console/0.49.1/spectre.console.0.49.1.nupkg.sha512",
+    "/Users/michaelkvasin/.nuget/packages/spectre.console.cli/0.49.1/spectre.console.cli.0.49.1.nupkg.sha512"
+  ],
+  "logs": []
+}
