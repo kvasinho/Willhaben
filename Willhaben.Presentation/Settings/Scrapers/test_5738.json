@@ -1,0 +1,71 @@
+{
+  "SfId": "8243cdb1-2534-4bfe-87a4-360d6b07f1cd",
+  "Url": "https://www.willhaben.at/webapi/iad/search/atz/seo/kaufen-und-verkaufen/marktplatz?sfId=8243cdb1-2534-4bfe-87a4-360d6b07f1cd\u0026rows=100\u0026isNavigation=true\u0026keyword=test\u0026AreaId=900\u0026treeAttributes=22\u0026treeAttributes=24\u0026treeAttributes=23",
+  "ScraperType": 0,
+  "FuzzyKeywords": [
+    "test"
+  ],
+  "ExactKeywords": [],
+  "OmitKeywords": [],
+  "AsPresentOnly": false,
+  "PayliveryOnly": false,
+  "PriceRange": {
+    "PriceFrom": 0,
+    "PriceTo": 0
+  },
+  "Locations": {
+    "Values": [
+      117223,
+      117224,
+      117225,
+      117226,
+      117227,
+      117228,
+      117229,
+      117230,
+      117231,
+      117232,
+      117233,
+      117234,
+      117235,
+      117236,
+      117237,
+      117238,
+      117239,
+      117240,
+      117241,
+      117242,
+      117243,
+      117244,
+      117245
+    ],
+    "SimplifiedValues": [
+      900
+    ]
+  },
+  "States": {
+    "Values": [
+      22,
+      24,
+      23
+    ],
+    "SimplifiedValues": [
+      22,
+      24,
+      23
+    ]
+  },
+  "Seller": -1,
+  "Handover": -1,
+  "Rows": 100,
+  "ScraperSettings": {
+    "Days": [
+      1,
+      2,
+      3
+    ],
+    "From": "08:00:00",
+    "To": "12:00:00",
+    "Interval": 2
+  }
+}

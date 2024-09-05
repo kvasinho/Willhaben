@@ -7,385 +7,139 @@ using Willhaben.Domain.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.VisualBasic;
+using Willhaben.Domain.StronglyTypedIds;
 using Willhaben.Domain.Utils;
 using Willhaben.Domain.Utils.Converters;
+using Willhaben.Presentation.Commands;
 
 namespace Willhaben.Presentation.Commands;
 
-/*
-public class CreateCommand : Command<CreateCommand.Settings>
+
+public class CreateCommandNoOptions : Command<CreateCommandNoOptions.Settings>
 {
     public class Settings : CommandSettings
     {
-        [CommandOption("-s|--scraper")]
-        public ScraperType? Type { get; set; }
-
-        public List<FuzzyKeyword> _fuzzyKeywords;
-        [CommandOption("--fuzzy <KEYWORDS>")]
-        public string[] FuzzyKeywords
-        {
-            get => _fuzzyKeywords?.Select(k => k.Value).ToArray() ?? new string[]{};
-            set
-            {
-                try
-                {
-                    _fuzzyKeywords = value.Select(v => new FuzzyKeyword(v)).ToList();
-                }
-                catch (KeywordException ex)
-                {
-                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
-                    _fuzzyKeywords = null;
-                }
-            }
-        }
-
-        public List<ExactKeyword> _exactKeywords;
-        [CommandOption("--exact <KEYWORDS>")]
-        public string[] ExactKeywords
-        {
-            get => _exactKeywords?.Select(k => k.Value).ToArray() ?? new string[]{};
-            set
-            {
-                try
-                {
-                    _exactKeywords = value.Select(v => new ExactKeyword(v)).ToList();
-                }
-                catch (KeywordException ex)
-                {
-                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
-                    _exactKeywords = null;
-                }
-            }
-        }
-
-        public List<OmitKeyword> _omitKeywords;
-        [CommandOption("--omit <KEYWORDS>")]
-        public string[] OmitKeywords
-        {
-            get => _omitKeywords?.Select(k => k.Value).ToArray() ?? new string[]{};
-            set
-            {
-                try
-                {
-                    _omitKeywords = value.Select(v => new OmitKeyword(v)).ToList();
-                }
-                catch (KeywordException ex)
-                {
-                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
-                    _omitKeywords = null;
-                }
-            }
-        }
-        [CommandOption("-p|--present-only")]
-        public bool? AsPresentOnly { get; set; }
-        
-        [CommandOption("--paylivery-only")]
-        public bool? PayliveryOnly { get; set; }
-
-        public PriceRange PriceRange { get; set; } = new PriceRange();
-        [CommandOption("--price-from")]
-        public int PriceFrom
-        {
-            get => PriceRange.PriceFrom ?? 0;
-            set
-            {
-                PriceRange.SetPriceFrom(value);
-            }
-        }
-        [CommandOption("--price-to")]
-        public int PriceTo
-        {
-            get => PriceRange.PriceTo ?? 0;
-            set
-            {
-                PriceRange.SetPriceTo(value);
-
-            }
-        }
-
-        public LocationCollection Locations { get; set; } = new LocationCollection();
-
-        [CommandOption("--location")]
-        [DefaultValue(new Location[]{})]
-        public Location[] SelectedLocations
-        {
-            get => Locations.ToArray();
-            set
-            {
-                try
-                {
-                    if (value is not null && value.Length > 0)
-                    {
-                        Locations.FromArray(value);
-                        SelectedLocations = value;
-                    }
-
-                }
-                catch (KeywordException ex)
-                {
-                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
-                }
-            }
-        }
-
-
-        public StateCollection States { get; set; } = new StateCollection();
-        [DefaultValue(new State[]{})]
-
-        [CommandOption("--states")]
-        public State[] SelectedStates
-        {
-            get => States.ToArray();
-            set
-            {
-                try
-                {
-                    if (value is not null && value.Length > 0)
-                    {
-                        States.FromArray(value);
-                        SelectedStates = value;
-                    }
-
-                }
-                catch (KeywordException ex)
-                {
-                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
-                }
-            }
-        }
-        
-        public DayOfWeekCollection Days { get; set; } = new DayOfWeekCollection();
-
-        [CommandOption("--days")]
-        [DefaultValue(new DayOfWeek[]{})]
-        public DayOfWeek[] SelectedDays
-        {
-            get => Days.ToArray();
-            set
-            {
-                try
-                {
-                    Console.WriteLine($"Value1:{value}");
-
-                    if (value is not null && value.Length > 0)
-                    {
-                        Console.WriteLine($"Value:{value}");
-                        Days.FromArray(value);
-                        SelectedDays = value;
-                    }
-
-                }
-                catch (KeywordException ex)
-                {
-                    AnsiConsole.MarkupLine("[red]Error:[/] {0}", ex.Message);
-                }
-            }
-        }
-        
-        [CommandOption("--seller")]
-        public Seller? Seller { get; set; }
-        
-        [CommandOption("--handover")]
-        public Handover? Handover { get; set; }
-        
-        
-        public TimeRange Time { get; set; } = new TimeRange();
-        [CommandOption("--time-from")]
-        public TimeOnly? TimeFrom
-        {
-            get => Time.From != TimeOnly.MinValue ? Time.From : (TimeOnly?)null;
-            set => Time.From = value ?? TimeOnly.MinValue; 
-        }
-
-        public TimeOnly? TimeTo
-        {
-            get => Time.To != TimeOnly.MaxValue ? Time.To : (TimeOnly?)null;
-            set => Time.To = value ?? TimeOnly.MaxValue; 
-        }
-
-        
-
-        public enum ScraperType
-        {
-            WILLHABEN,
-            EBAY,
-            CUSTOM
-        }
-        
     }
-
-    class JsonSettings
+    
+    public IJsonSettings CreateSettings(ScraperType scraperType)
     {
-        [JsonIgnore]
-        public string Filename
+        return scraperType switch
         {
-            
-            get
-            {
-                
-                if (FuzzyKeywords.Any() || ExactKeywords.Any() || OmitKeywords.Any())
-                {
-                    // Build parts for each type of keyword
-                    var fuzzyPart = FuzzyKeywords.Any() ? string.Join("_", FuzzyKeywords.Select(kw => kw.Value)) : null;
-                    var exactPart = ExactKeywords.Any() ? string.Join("_", ExactKeywords.Select(kw => kw.Value)) : null;
-                    var omitPart = OmitKeywords.Any() ? string.Join("_", OmitKeywords.Select(kw => kw.Value)) : null;
-
-                    // Combine the parts with "_" if they exist
-                    var parts = new List<string>();
-
-                    if (fuzzyPart != null) parts.Add(fuzzyPart);
-                    if (exactPart != null) parts.Add(exactPart);
-                    if (omitPart != null) parts.Add(omitPart);
-
-                    // Join the parts with "__" to separate different keyword classes
-                    return string.Join("_", parts).GenerateRandomNDigitString();
-                }
-                else
-                {
-                    return $"no_keywords_".GenerateRandomNDigitString();
-                }
-            }
-        }
-
-        public  Settings.ScraperType Type { get; set; }
-        
-        [JsonConverter(typeof(KeywordListJsonConverter<FuzzyKeyword>))]
-        public List<FuzzyKeyword> FuzzyKeywords { get; set; } = new List<FuzzyKeyword>();
-        
-        [JsonConverter(typeof(KeywordListJsonConverter<ExactKeyword>))]
-        public List<ExactKeyword> ExactKeywords { get; set; } = new List<ExactKeyword>();
-        
-        [JsonConverter(typeof(KeywordListJsonConverter<OmitKeyword>))]
-        public List<OmitKeyword> OmitKeywords { get; set; } = new List<OmitKeyword>();
-        public bool AsPresentOnly { get; set; } = false;
-        public bool PayliveryOnly { get; set; }
-        public PriceRange PriceRange { get; set; } = new PriceRange();
-        public List<Location> Locations { get; set; } = new List<Location>();
-        public List<State> States { get; set; } = new List<State>();
-        public Seller Seller { get; set; }
-        public Handover Handover { get; set; }
-
-        [JsonConverter(typeof(SimplifyableEnumCollectionConverter<DayOfWeek, DayOfWeekCollection>))]
-        public DayOfWeekCollection Days { get; set; } = new DayOfWeekCollection();
-
-        public TimeRange TimeRange { get; set; } = new TimeRange();
+            ScraperType.WILLHABEN => new WillhabenJsonSettings(),
+            _ => throw new ArgumentOutOfRangeException(nameof(scraperType),
+                $"No settings available for scraper type {scraperType}.")
+        };
     }
 
 
     public  override int Execute(CommandContext context, Settings settings)
     {
-        JsonSettings jsonSettings = new JsonSettings();
-        jsonSettings.Type = settings.Type ?? PromptForScraperType();
-        if (settings._fuzzyKeywords is not null || settings._exactKeywords is not null || settings._omitKeywords is not null)
+        var type = PromptForType();
+        var jsonSettings = CreateSettings(type);
+
+        if (jsonSettings is WillhabenJsonSettings willhaben)
         {
             ExplainKeywords();
-        }
 
-        jsonSettings.FuzzyKeywords = settings._fuzzyKeywords ?? PromptForKeywords<FuzzyKeyword>("fuzzy");
-        jsonSettings.ExactKeywords = settings._exactKeywords ?? PromptForKeywords<ExactKeyword>("exact");
-        jsonSettings.OmitKeywords = settings._omitKeywords ?? PromptForKeywords<OmitKeyword>("omitted");
-
-        jsonSettings.AsPresentOnly = settings.AsPresentOnly ?? PromptForOnlyPresent();
-        AnsiConsole.MarkupLine("testtest");
-        AnsiConsole.MarkupLine($"{jsonSettings.AsPresentOnly}");
-
-        AnsiConsole.MarkupLine($"{jsonSettings.PriceRange.PriceTo ?? 12}");
-
-        if (jsonSettings.AsPresentOnly == false)
-        {
-            var isQueryingPrice = true;
-            while (isQueryingPrice)
+            willhaben.FuzzyKeywords = PromptForKeywords<FuzzyKeyword>("fuzzy");
+            willhaben.ExactKeywords = PromptForKeywords<ExactKeyword>("exact");
+            willhaben.OmitKeywords = PromptForKeywords<OmitKeyword>("omitted");
+            
+            willhaben.AsPresentOnly =  PromptForOnlyPresent();
+            
+            if (willhaben.AsPresentOnly == false)
             {
-                AnsiConsole.MarkupLine($"whatever");
-
-                var priceFrom = PromptForInteger("Enter the minimum price of an item:", price => settings.PriceRange.IsValidPriceFrom(price));
-                jsonSettings.PriceRange.SetPriceFrom(priceFrom);
-
-                var priceTo = PromptForInteger("Enter the maximum price of an item:", price => settings.PriceRange.IsValidPriceTo(price));
-                jsonSettings.PriceRange.SetPriceTo(priceTo);
-                AnsiConsole.MarkupLine("321");
-                if (priceTo == 0 && priceFrom == 0)
+                var isQueryingPrice = true;
+                while (isQueryingPrice)
                 {
-                    isQueryingPrice =
-                        !PromptForConfirmation("Setting both prices to 0 leads to only free items. Are you sure?");
-                }
-                else
-                {
-                    isQueryingPrice = false;
+
+                    var priceFrom = PromptForInteger("Enter the minimum price of an item:", price => willhaben.PriceRange.IsValidPriceFrom(price));
+                    willhaben.PriceRange.SetPriceFrom(priceFrom);
+
+                    var priceTo = PromptForInteger("Enter the maximum price of an item:", price => willhaben.PriceRange.IsValidPriceTo(price));
+                    willhaben.PriceRange.SetPriceTo(priceTo);
+                    if (priceTo == 0 && priceFrom == 0)
+                    {
+                        isQueryingPrice =
+                            !PromptForConfirmation("Setting both prices to 0 leads to only free items. Are you sure?");
+                    }
+                    else
+                    {
+                        willhaben.AsPresentOnly = true;
+                        isQueryingPrice = false;
+                    }
                 }
             }
-        }
-        else
-        {
-            jsonSettings.PriceRange.SetPriceFrom(0);
-            jsonSettings.PriceRange.SetPriceTo(0);
-        }
-        AnsiConsole.MarkupLine($"{settings.SelectedLocations is null}");
-        AnsiConsole.MarkupLine("333");
-        
-        if (settings.SelectedLocations.Length > 0)
-        {
-            AnsiConsole.MarkupLine("123");
-            jsonSettings.Locations = settings.Locations.ToList();
-        }
-        else
-        {
-            AnsiConsole.MarkupLine("999");
+            else
+            {
+                willhaben.PriceRange.SetPriceFrom(0);
+                willhaben.PriceRange.SetPriceTo(0);
+            }
 
-            jsonSettings.Locations = PromptForLocations().ToList();
+
+            willhaben.Locations = PromptForLocations();
+            willhaben.States = PromptForStates();
+            willhaben.PayliveryOnly = PromptForPaylivery();
+            willhaben.Seller = PromptForSeller();
+            willhaben.Handover = PromptForHandover();
+            willhaben.Rows = PromptForInteger("How many items do you want to scrape? Default: 100",
+                i => i > 0 && i <= 200, 100);
+            willhaben.ScraperSettings.Days = PromptForDays().ToList();
+            willhaben.ScraperSettings.From = PromptForTime("At what time should the scraper start:", TimeOnly.MinValue, willhaben.ScraperSettings.IsValidTimeFrom);
+            willhaben.ScraperSettings.To = PromptForTime("At what time should the scraper end:", TimeOnly.MaxValue, willhaben.ScraperSettings.IsValidTimeTo);
+            willhaben.ScraperSettings.Interval = PromptForInterval();
+            
+            AnsiConsole.MarkupLine(willhaben.Url);
+            
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true // Enable pretty-printing
+            };
+            using FileStream createStream = File.Create(@$"./Scrapers/{willhaben.Filename}.json");
+            JsonSerializer.Serialize(createStream,willhaben, options);
         }
         
-        if (settings.SelectedStates.Length > 0)
-        {
-            jsonSettings.States = settings.States.ToList();
-        }
-        else
-        {
-            jsonSettings.States = PromptForStates().ToList();
-        }
-        
-        jsonSettings.PayliveryOnly = settings.PayliveryOnly ?? PromptForPaylivery();
-        jsonSettings.Seller = settings.Seller ?? PromptForSeller();
-        jsonSettings.Handover = settings.Handover ?? PromptForHandover();
-        
-        if (settings.SelectedDays.Length > 0)
-        {
-
-            jsonSettings.Days.FromArray(settings.SelectedDays);
-        }
-        else
-        {
-
-            jsonSettings.Days = PromptForDays();
-        }
-
-        jsonSettings.TimeRange.From = settings.Time.From ?? PromptForTime("At what time should the scraper start:", TimeOnly.MinValue, settings.Time.IsValidTimeFrom);
-        
-        
-
-        var options = new JsonSerializerOptions
-        {
-            WriteIndented = true // Enable pretty-printing
-        };
-        using FileStream createStream = File.Create(@$"./Scrapers/{jsonSettings.Filename}.json");
-        JsonSerializer.Serialize(createStream,jsonSettings, options);
-
         
         return 0;
     }
 
     
-    private Settings.ScraperType PromptForScraperType()
+    private ScraperType PromptForScraperType()
     {
         return AnsiConsole.Prompt(
-            new SelectionPrompt<Settings.ScraperType>()
+            new SelectionPrompt<ScraperType>()
                 .Title("For which website do you want to add a new scraper?")
                 .PageSize(10)
                 .MoreChoicesText("[grey](Move up and down to reveal more scrapers)[/]")
-                .AddChoices(Settings.ScraperType.WILLHABEN, Settings.ScraperType.EBAY, Settings.ScraperType.CUSTOM));
+                .AddChoices(ScraperType.WILLHABEN, ScraperType.EBAY, ScraperType.CUSTOM));
     }
     
-
+    private Interval PromptForInterval()
+    {
+        Dictionary<string, Interval> intervals = new Dictionary<string, Interval>()
+        {
+            { "Minute", Interval.M1 },
+            { "5 Minutes", Interval.M5 },
+            { "2 Minutes", Interval.M2 },
+            { "10 Minutes", Interval.M10 },
+            { "15 Minutes", Interval.M15 },
+            { "30 Minutes", Interval.M30 },
+            { "Hour", Interval.H1 },
+            { "2 Hours", Interval.H2 },
+            { "4 Hours", Interval.H4 },
+            { "6 Hours", Interval.H6 },
+            { "12 Hours", Interval.H12 },
+            { "Day", Interval.D1}
+        };
+        var interval  =AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("How often do you want to let the scraper run? Every..")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down to reveal more scrapers)[/]")
+                .AddChoices(intervals.Keys));
+        
+        return intervals[interval];
+    }
     
     private bool PromptForConfirmation(string prompt)
     {
@@ -405,7 +159,7 @@ public class CreateCommand : Command<CreateCommand.Settings>
                 .AddChoices("no", "yes"));
         return choice == "yes";
     }
-    private int PromptForInteger(string question, Func<int, bool> validation)
+    private int PromptForInteger(string question, Func<int, bool> validation, int defaultValue = 0)
     {
         while (true)
         {
@@ -416,9 +170,9 @@ public class CreateCommand : Command<CreateCommand.Settings>
 
             if (string.IsNullOrEmpty(input))
             {
-                if (validation(0))
+                if (validation(defaultValue))
                 {
-                    return 0;
+                    return defaultValue;
                 }
                 else
                 {
@@ -624,6 +378,16 @@ public class CreateCommand : Command<CreateCommand.Settings>
                 .AddChoices(new []{Handover.BOTH, Handover.SHIPMENT, Handover.SELFCOLLECTION}));
         return choice;
     }
+    
+    private ScraperType PromptForType()
+    {
+        var choice =  AnsiConsole.Prompt(
+            new SelectionPrompt<ScraperType>()
+                .Title("Which type of scraper do you want to implement")
+                .PageSize(3)
+                .AddChoices(new []{ScraperType.WILLHABEN,ScraperType.EBAY, ScraperType.CUSTOM}));
+        return choice;
+    }
 
     private TimeOnly PromptForTime(string prompt, TimeOnly defaultValue, Func<TimeOnly, bool> validation)
     {
@@ -744,4 +508,3 @@ public class CreateCommand : Command<CreateCommand.Settings>
         }
     }
 }
-*/

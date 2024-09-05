@@ -45,38 +45,31 @@ public class Settings
 
     public enum Interval
     {
-        //[EnumMember(Value = "1m")]
-        M1,
+        M1 = 1,
 
-       // [EnumMember(Value = "2m")]
-        M2,
+        M2 = 2,
 
-       // [EnumMember(Value = "5m")]
-        M5,
+        M5 = 5,
 
-      //  [EnumMember(Value = "10m")]
-        M10,
+        M10 = 10,
 
-       // [EnumMember(Value = "15m")]
-        M15,
+        M15 = 15,
 
-      //  [EnumMember(Value = "30m")]
-        M30,
+        M30 = 30,
 
-        //[EnumMember(Value = "1h")]
-        H1,
+        H1 = 60,
 
-       // [EnumMember(Value = "2h")]
-        H2,
+        H2 = 120,
 
-       // [EnumMember(Value = "4h")]
-        H4,
+        H4 = 240,
 
-       // [EnumMember(Value = "6h")]
-        H6,
+        H6 = 360,
 
-       // [EnumMember(Value = "12h")]
-        H12,
+        H12 = 720,
+        
+        D1 = 1440
+        
+        ,
     }
 
 

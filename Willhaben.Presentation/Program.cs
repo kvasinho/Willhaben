@@ -1,6 +1,7 @@
 ﻿
 using Spectre.Console;
 using Spectre.Console.Cli;
+using Willhaben.Domain.Models;
 using Willhaben.Presentation.Commands;
 
 
@@ -19,7 +20,14 @@ namespace Willhaben.Presentation
             var app = new CommandApp();
             app.Configure(config =>
             {
-                config.AddCommand<CreateCommand>("create");
+                config.AddCommand<CreateCommandNoOptions>("create");
+
+                config.AddBranch<SettingsSettings>("settings", add =>
+                {
+                    add.AddCommand<EditGlobalSettingsCommand>("edit");
+                    //Add View COmmand
+                });    
+
             });
 
             return app.Run(args);

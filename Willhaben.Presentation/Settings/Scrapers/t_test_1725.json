@@ -1,0 +1,33 @@
+{
+  "Type": 0,
+  "FuzzyKeywords": [
+    "t",
+    "test"
+  ],
+  "ExactKeywords": [],
+  "OmitKeywords": [],
+  "AsPresentOnly": false,
+  "PayliveryOnly": false,
+  "PriceRange": {
+    "PriceFrom": 0,
+    "PriceTo": 0
+  },
+  "Locations": [
+    900,
+    102,
+    103
+  ],
+  "States": [
+    22,
+    24,
+    23
+  ],
+  "Seller": -1,
+  "Handover": -1,
+  "Days": [
+    1,
+    2,
+    3,
+    4
+  ]
+}

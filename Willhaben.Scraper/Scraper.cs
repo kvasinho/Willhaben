@@ -1,16 +1,12 @@
+using Willhaben.Domain.Models;
+using Willhaben.Domain.StronglyTypedIds;
 using Willhaben.Scraper.Products;
 
 namespace Willhaben.Scraper;
 
-
-
-
-public abstract class Scraper<TObject>
+public abstract class Scraper
 {
-    //Scraper should just have a single scrape method that returns a collcetion of any object 
-    //This should furthermore contain inputs like User Agents, proxies etc. 
-    //Retries and timing are not managed in here but rather in the manager. 
-     public abstract string Key { get; set; }
+     public abstract Key Key { get; set; }
      
      public List<string> UserAgents { get; set; } = new List<string>
      {
@@ -19,41 +15,55 @@ public abstract class Scraper<TObject>
          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Safari/605.1.15",
      };
      
-     protected readonly IJsonToUrlConverterService? JsonToUrlConverterService;
+     public abstract  Task<ICollection<ScrapingResult<TObject>>> Scrape<TObject>();
+     
+     public ScraperSettings ScraperSettings { get; set; }
 
-     public Scraper(IJsonToUrlConverterService? urlBuilderService = null)
+     public DateTime CalculateNextRun(DateTime? lastRun)
      {
-         this.JsonToUrlConverterService = urlBuilderService;
+         DateTime nextTime = lastRun ?? DateTime.Now;
+         //if there was a last run, we want to make sure we are intervals after + within boundaries 
+         
+         //if there was no last run, we want to get first date within boundaries. 
+         return nextTime;
      }
-     public abstract ScrapingResult<TObject> Scrape();
 }
-/*
-public class WillhabenScraper : Scraper<WillhabenResult>
+//Er kriegt die Settings direkt, weil sie davor eingelesen werden müssen. -> Class wird erstellt durch Factory Reading Method die nach Type separiert.
+//SCraper wird damit instantgesetzt. 
+//PriorityQueue wird für jeden Key erstellt -> dann wird gescraped. 
+public class WillhabenScraper : Scraper
 {
-    //UrlbuilderService nutzen um die Url zu erstellen. 
-    public override string Key { get; set; } = "willhaben";
-    
-    public WillhabenScraper(string filepath): base(new JsonWillhabenUrlService(filepath)){}
-
-    public override ScrapingResult<WillhabenResult> Scrape()
+    private readonly WillhabenJsonSettings _willhabenJsonSettings;
+    public WillhabenScraper(WillhabenJsonSettings willhabenJsonSettings)
     {
-        var url = base.UrlBuilderService.Url;
-        return new ScrapingResult<WillhabenResult>();
+        _willhabenJsonSettings = willhabenJsonSettings;
+    }
+
+    public override Key Key { get; set; } =new Key(ScraperType.WILLHABEN.ToString());
+    public override async Task<ICollection<ScrapingResult<WillhabenResult>>> Scrape<WillhabenResult>()
+    {
+        await Task.Delay(1);
+        return new List<ScrapingResult<WillhabenResult>>();
+    }
+
+    public static async Task<WillhabenScraper> FromJson(string filePath)
+    {
+        var settings = await WillhabenJsonSettings.FromJsonAsync(filePath);
+        return new WillhabenScraper(settings);
     }
 }
-*/
-public class EbayScraper : Scraper<EbayResult>
-{
-    //UrlbuilderService nutzen um die Url zu erstellen. 
-    public override string Key { get; set; } = "ebay";
 
-    public override ScrapingResult<EbayResult> Scrape()
+public class EbayScraper : Scraper
+{
+    public override Key Key { get; set; } =new Key(ScraperType.WILLHABEN.ToString());
+
+    public override async  Task<ICollection<ScrapingResult<EbayResult>>> Scrape<EbayResult>()
     {
-        return new ScrapingResult<EbayResult>();
+        await Task.Delay(1);
+        return new List<ScrapingResult<EbayResult>>();    
     }
 }
 
-//Wullhaben scraper -> implementation of Scraper with defined Scrape method. 
 
 public class ScrapingResult<T>
 {
@@ -62,12 +72,10 @@ public class ScrapingResult<T>
     public string ErrorMessage { get; set; }
     public int StatusCode { get; set; }
 }
-
 public class WillhabenResult
 {
     public string Test { get; set; } = "willhaben";
 }
-
 public class EbayResult
 {
     public string Test { get; set; } = "ebay";

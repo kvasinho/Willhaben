@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Willhaben.Presentation")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7862551e759cceeef1089cbca4c08147b8a2393")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b5ebfad9ff5787d96553ff15a92b96d1555a1aa3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Willhaben.Presentation")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Willhaben.Presentation")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

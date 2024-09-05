@@ -1,0 +1,29 @@
+{
+  "Url": "",
+  "ScraperType": 0,
+  "FuzzyKeywords": [],
+  "ExactKeywords": [],
+  "OmitKeywords": [],
+  "AsPresentOnly": false,
+  "PayliveryOnly": false,
+  "PriceRange": {
+    "PriceFrom": 0,
+    "PriceTo": 0
+  },
+  "Locations": {
+    "Values": [],
+    "SimplifiedValues": []
+  },
+  "States": {
+    "Values": [],
+    "SimplifiedValues": []
+  },
+  "Seller": -1,
+  "Handover": -1,
+  "ScraperSettings": {
+    "Days": [],
+    "From": "00:00:00",
+    "To": "23:59:59.9999999",
+    "Interval": 0
+  }
+}
