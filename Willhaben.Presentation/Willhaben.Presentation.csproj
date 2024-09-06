@@ -15,12 +15,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0-preview.7.24405.7" />
       <PackageReference Include="Spectre.Console" Version="0.49.1" />
       <PackageReference Include="Spectre.Console.Cli" Version="0.49.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Willhaben.Domain\Willhaben.Domain.csproj" />
+      <ProjectReference Include="..\Willhaben.Infrastructure\Willhaben.Infrastructure.csproj" />
+      <ProjectReference Include="..\Willhaben.JsonScraper\Willhaben.JsonScraper.csproj" />
+      <ProjectReference Include="..\Willhaben.Manager\Willhaben.Manager.csproj" />
+      <ProjectReference Include="..\Willhaben.Scraper\Willhaben.Scraper.csproj" />
     </ItemGroup>
 
     <ItemGroup>

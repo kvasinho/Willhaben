@@ -7,6 +7,7 @@ using Willhaben.Domain.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.VisualBasic;
+using Willhaben.Domain.Settings;
 using Willhaben.Domain.StronglyTypedIds;
 using Willhaben.Domain.Utils;
 using Willhaben.Domain.Utils.Converters;
@@ -15,29 +16,20 @@ using Willhaben.Presentation.Commands;
 namespace Willhaben.Presentation.Commands;
 
 
-public class CreateCommandNoOptions : Command<CreateCommandNoOptions.Settings>
+public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Settings>
 {
     public class Settings : CommandSettings
     {
     }
     
-    public IJsonSettings CreateSettings(ScraperType scraperType)
-    {
-        return scraperType switch
-        {
-            ScraperType.WILLHABEN => new WillhabenJsonSettings(),
-            _ => throw new ArgumentOutOfRangeException(nameof(scraperType),
-                $"No settings available for scraper type {scraperType}.")
-        };
-    }
+    
 
-
-    public  override int Execute(CommandContext context, Settings settings)
+    public  override async  Task<int> ExecuteAsync(CommandContext context, Settings settings)
     {
         var type = PromptForType();
-        var jsonSettings = CreateSettings(type);
+        var jsonSettings = JsonScraperFactory.CreateFromScraperType(type);
 
-        if (jsonSettings is WillhabenJsonSettings willhaben)
+        if (jsonSettings is WillhabenScraperSettings willhaben)
         {
             ExplainKeywords();
 
@@ -84,22 +76,15 @@ public class CreateCommandNoOptions : Command<CreateCommandNoOptions.Settings>
             willhaben.Handover = PromptForHandover();
             willhaben.Rows = PromptForInteger("How many items do you want to scrape? Default: 100",
                 i => i > 0 && i <= 200, 100);
-            willhaben.ScraperSettings.Days = PromptForDays().ToList();
-            willhaben.ScraperSettings.From = PromptForTime("At what time should the scraper start:", TimeOnly.MinValue, willhaben.ScraperSettings.IsValidTimeFrom);
-            willhaben.ScraperSettings.To = PromptForTime("At what time should the scraper end:", TimeOnly.MaxValue, willhaben.ScraperSettings.IsValidTimeTo);
-            willhaben.ScraperSettings.Interval = PromptForInterval();
+            willhaben.ScrapingScheduleSettings.Days = PromptForDays().ToList();
+            willhaben.ScrapingScheduleSettings.From = PromptForTime("At what time should the scraper start:", TimeOnly.MinValue, willhaben.ScrapingScheduleSettings.IsValidTimeFrom);
+            willhaben.ScrapingScheduleSettings.To = PromptForTime("At what time should the scraper end:", TimeOnly.MaxValue, willhaben.ScrapingScheduleSettings.IsValidTimeTo);
+            willhaben.ScrapingScheduleSettings.Interval = PromptForInterval();
             
-            AnsiConsole.MarkupLine(willhaben.Url);
-            
-            var options = new JsonSerializerOptions
-            {
-                WriteIndented = true // Enable pretty-printing
-            };
-            using FileStream createStream = File.Create(@$"./Scrapers/{willhaben.Filename}.json");
-            JsonSerializer.Serialize(createStream,willhaben, options);
+            await willhaben.ToJsonAsync();
         }
-        
-        
+
+
         return 0;
     }
 

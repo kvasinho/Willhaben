@@ -4,13 +4,8 @@ using Spectre.Console;
 using Spectre.Console.Cli;
 using Willhaben.Domain.Exceptions;
 using Willhaben.Domain.Models;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.VisualBasic;
-using Willhaben.Domain.StronglyTypedIds;
-using Willhaben.Domain.Utils;
-using Willhaben.Domain.Utils.Converters;
-using Willhaben.Presentation.Commands;
+using Willhaben.Domain.Settings;
+
 
 namespace Willhaben.Presentation.Commands;
 
@@ -30,13 +25,13 @@ public class EditGlobalSettingsCommand : Command<EditSettings>
                 Commands.SharedPrompts.PromptForSingleEnum<LogRotation>("How frequently should logs be rotated");
             global.Connection.ConnectionTimeout = Commands.SharedPrompts.PromptForInteger("Whats the connection timeout on your side?",
                 (i => i > 0), global.Connection.ConnectionTimeout);
-            global.Connection.RequestTimeout = Commands.SharedPrompts.PromptForInteger("Whats the connection timeout on your side?",
+            global.Connection.RequestTimeout = Commands.SharedPrompts.PromptForInteger("Whats the connection timeout on the server side?",
                 (i => i > 0), global.Connection.RequestTimeout);
-            global.Connection.MaxRetries = Commands.SharedPrompts.PromptForInteger("Whats the connection timeout on your side?",
+            global.Connection.MaxRetries = Commands.SharedPrompts.PromptForInteger("Whats the maximum amount of retries if a requst fails?",
                 (i => i > 0), global.Connection.MaxRetries);
 
                         
-            global.ToJson(@$"../../Settings/Global/globalSettings.json");
+            global.ToJson();
 
             return 0;
         }

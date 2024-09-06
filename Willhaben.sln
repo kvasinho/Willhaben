@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Manager", "Willhaben.Manager\Willhaben.Manager.csproj", "{4FCD793A-8309-4F1C-A3F4-8140AE3730E4}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Scraper", "Willhaben.Scraper\Willhaben.Scraper.csproj", "{DFA85AC7-C6C4-45DA-B8E7-D4855DD7FE3C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Domain", "Willhaben.Domain\Willhaben.Domain.csproj", "{F9DBEEEE-8966-40F5-9B91-00186F2944A4}"
@@ -10,16 +8,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Tests", "Willhabe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Presentation", "Willhaben.Presentation\Willhaben.Presentation.csproj", "{FD23778F-8E49-4BDC-BC09-6CE222924A6A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Infrastructure", "Willhaben.Infrastructure\Willhaben.Infrastructure.csproj", "{04747CBE-FF3A-4611-8E99-DC5E7FD3E4B8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Willhaben.Application", "Willhaben.Application", "{166AEEC0-7BE3-454E-A397-5BBAF7252B79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.JsonScraper", "Willhaben.JsonScraper\Willhaben.JsonScraper.csproj", "{E4E79688-5352-455C-9077-C295974D7456}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Willhaben.Manager", "Willhaben.Manager\Willhaben.Manager.csproj", "{F9B0BD1B-5981-4006-8564-67CED68E94B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4FCD793A-8309-4F1C-A3F4-8140AE3730E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FCD793A-8309-4F1C-A3F4-8140AE3730E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4FCD793A-8309-4F1C-A3F4-8140AE3730E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FCD793A-8309-4F1C-A3F4-8140AE3730E4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFA85AC7-C6C4-45DA-B8E7-D4855DD7FE3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFA85AC7-C6C4-45DA-B8E7-D4855DD7FE3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA85AC7-C6C4-45DA-B8E7-D4855DD7FE3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -36,5 +38,22 @@ Global
 		{FD23778F-8E49-4BDC-BC09-6CE222924A6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD23778F-8E49-4BDC-BC09-6CE222924A6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD23778F-8E49-4BDC-BC09-6CE222924A6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04747CBE-FF3A-4611-8E99-DC5E7FD3E4B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04747CBE-FF3A-4611-8E99-DC5E7FD3E4B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04747CBE-FF3A-4611-8E99-DC5E7FD3E4B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04747CBE-FF3A-4611-8E99-DC5E7FD3E4B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4E79688-5352-455C-9077-C295974D7456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4E79688-5352-455C-9077-C295974D7456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4E79688-5352-455C-9077-C295974D7456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E79688-5352-455C-9077-C295974D7456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9B0BD1B-5981-4006-8564-67CED68E94B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9B0BD1B-5981-4006-8564-67CED68E94B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9B0BD1B-5981-4006-8564-67CED68E94B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9B0BD1B-5981-4006-8564-67CED68E94B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DFA85AC7-C6C4-45DA-B8E7-D4855DD7FE3C} = {166AEEC0-7BE3-454E-A397-5BBAF7252B79}
+		{E4E79688-5352-455C-9077-C295974D7456} = {166AEEC0-7BE3-454E-A397-5BBAF7252B79}
+		{F9B0BD1B-5981-4006-8564-67CED68E94B9} = {166AEEC0-7BE3-454E-A397-5BBAF7252B79}
 	EndGlobalSection
 EndGlobal

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Willhaben.Domain.Exceptions;
 
 namespace Willhaben.Domain.Models;
@@ -7,6 +8,8 @@ public class TimeRange
     // Nullable backing fields
     private TimeOnly? _from = null;
     private TimeOnly? _to = null;
+
+    
 
     // Public properties with default values
     public TimeOnly From

@@ -13,9 +13,9 @@ public record Key
         }
         set
         {
-            if (!value.HasOnlyLetters())
+            if (string.IsNullOrEmpty(value))
             {
-                throw new ArgumentException("Key can only contain letters.");
+                throw new ArgumentException("Key cannot be null");
             }
 
             _value = value;
@@ -26,5 +26,15 @@ public record Key
     {
         Value = value;
     }
-    
+
+
+    public virtual bool Equals(Key? other)
+    {
+        if (other is null)
+        {
+            throw new ArgumentNullException();
+        }
+
+        return _value == other._value;
+    }
 }
