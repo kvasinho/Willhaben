@@ -1,0 +1,29 @@
+{
+  "Id": "f949868e-f5ea-4910-a08b-35805f2eb04b",
+  "ScraperType": 0,
+  "FuzzyKeywords": [],
+  "ExactKeywords": [],
+  "OmitKeywords": [],
+  "AsPresentOnly": true,
+  "PayliveryOnly": false,
+  "PriceRange": {
+    "PriceFrom": 20,
+    "PriceTo": 100
+  },
+  "Locations": [
+    900
+  ],
+  "States": [],
+  "Seller": -1,
+  "Handover": -1,
+  "Rows": 100,
+  "ScrapingScheduleSettings": {
+    "Days": [
+      1
+    ],
+    "From": "02:00",
+    "To": "01:59",
+    "Interval": 60,
+    "GetNextPossibleRunTimeAfterInterval": "2024-09-09T02:00:00Z"
+  }
+}

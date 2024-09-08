@@ -4,8 +4,10 @@ namespace Willhaben.Domain.Utils;
 
 public static class EnumExtensions
 {
-    public static int GetValue(this Enum @enum) => Convert.ToInt32(@enum);
-
+    public static int GetEnumValue<TEnum>(TEnum enumValue) where TEnum : Enum
+    {
+        return Convert.ToInt32(enumValue);
+    }
     public static void AddUnique<TEnum>(this ICollection<TEnum> collection, TEnum value) where TEnum: Enum
     {
         ArgumentNullException.ThrowIfNull(collection);
@@ -39,7 +41,7 @@ public static class EnumExtensions
     }
     public static List<T> GetAllValuesBetween<T>(int from, int to) where T : Enum
     {
-        return Enum.GetValues(typeof(T)).Cast<T>().Where(val => val.GetValue() >= from & val.GetValue() <= to).ToList();
+        return Enum.GetValues(typeof(T)).Cast<T>().Where(val => GetEnumValue(val) >= from & GetEnumValue(val) <= to).ToList();
     }
     
 
@@ -91,6 +93,8 @@ public static class EnumExtensions
             collection.AddUnique(value);
         }
     }
-    
-    
+    public static DayOfWeek GetNextDay(this DayOfWeek day)
+    {
+        return (DayOfWeek)(((int)day + 1) % 7);
+    }
 }

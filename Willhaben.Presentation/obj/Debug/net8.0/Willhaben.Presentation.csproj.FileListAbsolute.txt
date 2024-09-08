@@ -60,10 +60,8 @@
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Diagnostics.EventLog.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/runtimes/browser/lib/net8.0/System.Text.Encodings.Web.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.Infrastructure.dll
-/Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.JsonScraper.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.Manager.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.Scraper.dll
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.Infrastructure.pdb
-/Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.JsonScraper.pdb
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.Manager.pdb
 /Users/michaelkvasin/csharp/Willhaben/Willhaben.Presentation/bin/Debug/net8.0/Willhaben.Scraper.pdb

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Data;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -19,6 +20,7 @@ public class GlobalSettings
 
     public LoggingSettings Logging { get; set; } = new();
     public ConnectionSettings Connection { get; set; } = new();
+    public List<string> UserAgents { get; set; } = new();
     
     public void ToJson(string relativePath = @"Settings/Global/globalSettings.json")
     {
@@ -44,6 +46,7 @@ public class GlobalSettings
         MinBreakBetweenScrapes = 30;
         Logging = new LoggingSettings();
         Connection = new ConnectionSettings();
+        UserAgents = new List<string>();
     }
     public GlobalSettings(string filePath = @"Settings/Global/globalSettings.json")
     {
@@ -61,12 +64,22 @@ public class GlobalSettings
         if (File.Exists(filePath))
         {
             var json = File.ReadAllText(filePath);
+            
+            /*
+            var options = new JsonSerializerOptions
+            {
+                AllowTrailingCommas = true,
+                ReadCommentHandling = JsonCommentHandling.Allow
+            };
+            */
+            
             var settings = JsonSerializer.Deserialize<GlobalSettings>(json);
             if (settings is not null)
             {
                 MinBreakBetweenScrapes = settings.MinBreakBetweenScrapes;
                 Logging = settings.Logging;
                 Connection = settings.Connection;
+                UserAgents = settings.UserAgents;
             }
         }
         else

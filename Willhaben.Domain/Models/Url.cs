@@ -2,7 +2,7 @@ using Willhaben.Domain.Exceptions;
 using Willhaben.Domain.Utils;
 
 namespace Willhaben.Domain.Models;
-
+/*
 public interface IUrlBuilder
 {
     public string URL { get; }
@@ -187,3 +187,4 @@ public class WillhabenUrlBuilder: IUrlBuilder
     }
     
 }
+*/

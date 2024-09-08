@@ -8,16 +8,21 @@ using Willhaben.Domain.Utils.Converters;
 
 namespace Willhaben.Domain.Settings;
 
-public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScraperSettings>
+public class WillhabenScraperSettings: IScraperSettings
 {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Key Key { get; set; }
+        [JsonIgnore] public Key Key { get; set; } = new Key(ScraperType.WILLHABEN.ToString());
 
         [JsonIgnore] public static string BaseUrl { get; set; } =
             "https://www.willhaben.at/webapi/iad/search/atz/seo/kaufen-und-verkaufen/marktplatz";
         [JsonIgnore] public Guid SfId { get; set; } = Guid.NewGuid();
+
+        public void SetSfId()
+        {
+            SfId = Guid.NewGuid();
+        }
         
-        public string Url
+        [JsonIgnore] public string Url
         {
             get
             {
@@ -33,10 +38,10 @@ public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScr
                     : $"{(PriceRange.PriceFrom > 0 ? $"&PRICE_FROM={PriceRange.PriceFrom.Value}" : string.Empty)}" +
                       $"{(PriceRange.PriceTo > 0 ? $"&PRICE_TO={PriceRange.PriceTo.Value}" : string.Empty)}";
 
-                var locations = string.Join(string.Empty, Locations.SimplifiedValues.Select(location => $"&AreaId={location.GetValue()}"));
-                var seller = Seller == Seller.BOTH ? string.Empty : $"&ISPRIVATE={Seller.GetValue()}";
-                var handover = Handover == Handover.BOTH ? string.Empty : $"&treeAttributes={Handover.GetValue()}";
-                var states = string.Join(string.Empty, States.SimplifiedValues.Select(state => $"&treeAttributes={state.GetValue()}"));
+                var locations = string.Join(string.Empty, Locations.SimplifiedValues.Select(location => $"&AreaId={(int)location}"));
+                var seller = Seller == Seller.BOTH ? string.Empty : $"&ISPRIVATE={(int)Seller}";
+                var handover = Handover == Handover.BOTH ? string.Empty : $"&treeAttributes={(int)Handover}";
+                var states = string.Join(string.Empty, States.SimplifiedValues.Select(state => $"&treeAttributes={(int)state}"));
                 var paylivery = PayliveryOnly ? "&paylivery=true" : string.Empty;
 
                 return baseUrl +
@@ -59,6 +64,68 @@ public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScr
         
         [JsonConverter(typeof(KeywordListJsonConverter<OmitKeyword>))]
         public List<OmitKeyword> OmitKeywords { get; set; } = new List<OmitKeyword>();
+        
+        private bool KeywordExists(string keyword)
+        {
+            return FuzzyKeywords.Any(k => k.Value.Equals(keyword, StringComparison.OrdinalIgnoreCase)) ||
+                   ExactKeywords.Any(k => k.Value.Equals(keyword, StringComparison.OrdinalIgnoreCase)) ||
+                   OmitKeywords.Any(k => k.Value.Equals(keyword, StringComparison.OrdinalIgnoreCase));
+        }
+        public void AddFuzzyKeyword(FuzzyKeyword keyword)
+        {
+            if (KeywordExists(keyword.Value))
+            {
+                throw new ArgumentException($"The keyword '{keyword.Value}' already exists in one of the lists.");
+            }
+
+            FuzzyKeywords.Add(keyword);
+        }
+        public void AddFuzzyKeywords(List<FuzzyKeyword> keywords)
+        {
+            foreach (var keyword in keywords)
+            {
+                AddFuzzyKeyword(keyword);
+            }
+        }
+
+        // Custom method to add exact keywords
+        public void AddExactKeyword(ExactKeyword keyword)
+        {
+            if (KeywordExists(keyword.Value))
+            {
+                throw new ArgumentException($"The keyword '{keyword.Value}' already exists in one of the lists.");
+            }
+
+            ExactKeywords.Add(keyword);
+        }
+        public void AddExactKeywords(List<ExactKeyword> keywords)
+        {
+            foreach (var keyword in keywords)
+            {
+                AddExactKeyword(keyword);
+            }
+        }
+
+
+        // Custom method to add omit keywords
+        public void AddOmitKeyword(OmitKeyword keyword)
+        {
+            if (KeywordExists(keyword.Value))
+            {
+                throw new ArgumentException($"The keyword '{keyword.Value}' already exists in one of the lists.");
+            }
+
+            OmitKeywords.Add(keyword);
+        }
+        
+        public void AddOmitKeywords(List<OmitKeyword> keywords)
+        {
+            foreach (var keyword in keywords)
+            {
+                AddOmitKeyword(keyword);
+            }
+        }
+        
 
         [JsonIgnore]
         public List<Keyword> Keywords =>
@@ -69,9 +136,14 @@ public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScr
         
         public bool AsPresentOnly { get; set; } = false;
         public bool PayliveryOnly { get; set; } = false;
-        public PriceRange PriceRange { get; set; } = new PriceRange();
-        public LocationCollection Locations { get; set; } = new LocationCollection();
-        public StateCollection States { get; set; } = new StateCollection();
+        
+        [JsonConverter(typeof(PriceRangeConverter))]
+        public PriceRange PriceRange { get; set; } = new ();
+        [JsonConverter(typeof(SimplifyableCollectionConverter<LocationCollection,Location>))]
+        public LocationCollection Locations { get; set; } = new ();
+        
+        [JsonConverter(typeof(SimplifyableCollectionConverter<StateCollection,State>))]
+        public StateCollection States { get; set; } = new ();
         public Seller Seller { get; set; } = Seller.BOTH;
         public Handover Handover { get; set; } = Handover.BOTH;
 
@@ -89,7 +161,6 @@ public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScr
                 _rows = value;
             }
         }
-
         public ScrapingScheduleSettings ScrapingScheduleSettings { get; set; } = new();
         
         public static async Task<WillhabenScraperSettings> FromJsonAsync(string filePath)
@@ -103,10 +174,10 @@ public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScr
             {
                 throw new FileNotFoundException("The specified file does not exist", filePath);
             }
-
             using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 var settings = await JsonSerializer.DeserializeAsync<WillhabenScraperSettings>(fileStream);
+
                 return settings;
             }
         }
@@ -117,6 +188,7 @@ public class WillhabenScraperSettings: ISerializableScraperSettings<WillhabenScr
             {
                 WriteIndented = true
             };
+            var test = JsonSerializer.Serialize(this, options);
     
             await using FileStream createStream = File.Create(@$"Settings/Scrapers/{Id}.json");
     

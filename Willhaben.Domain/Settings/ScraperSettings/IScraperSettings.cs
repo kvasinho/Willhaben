@@ -1,4 +1,6 @@
+using System.Text.Json.Serialization;
 using Willhaben.Domain.Models;
+using Willhaben.Domain.StronglyTypedIds;
 
 namespace Willhaben.Domain.Settings;
 
@@ -10,20 +12,11 @@ namespace Willhaben.Domain.Settings;
 public interface IScraperSettings
 {
     public Guid Id { get; set; }
+    public Key Key { get; set; }
     public ScraperType ScraperType { get; }
     public ScrapingScheduleSettings ScrapingScheduleSettings { get; set; }
-}
-public interface ISerializableScraperSettings : IScraperSettings
-{
-    string Url { get; }
-    Task ToJsonAsync();
+    
+    [JsonIgnore]
+    string? Url { get; }
 }
 
-/// <summary>
-/// This Is the Interface for a json serializable scraper. (A scraper with all settings stored in json).
-/// It needs to implement from and to json methods and contain a Url (for transparency reasons).
-/// </summary>
-public interface ISerializableScraperSettings<T>: ISerializableScraperSettings
-{
-    public static abstract Task<T> FromJsonAsync(string filePath);
-}

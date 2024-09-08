@@ -1,54 +1,28 @@
 using Willhaben.Domain.Settings;
 using Willhaben.Domain.StronglyTypedIds;
+using Willhaben.Scraper.Implementations;
 
-namespace Willhaben.Scraper;
-
-public abstract class ScraperBase
+namespace Willhaben.Scraper
 {
-    //public abstract string Id { get; set; } <- IS IN SCRAPERSETTINGS
-    public  Key Key { get; set; } 
-    
-    public abstract  Task<ScrapingResult<TScrapingResult>> Scrape<TScrapingResult>()  where TScrapingResult: class;
-
-    public IScraperSettings ScraperSettings { get; set; }
-
-    public DateTime CalculateNextRun(DateTime? lastRun)
+    public interface IScraper
     {
-        DateTime nextTime = lastRun ?? DateTime.Now;
-        if (lastRun is not null)
-        {
-            nextTime.AddMinutes((double)ScraperSettings.ScrapingScheduleSettings.Interval);
-        }
-
-        return nextTime;
-    }
-
-    public ScraperBase(Key key)
-    {
-        Key = key;
-    }
-}
-
-public abstract class SerializableScraperBase: ScraperBase
-{
-    //FromJson Class
-    
-    public ISerializableScraperSettings ScraperSettings { get; set; }
-
-    protected SerializableScraperBase( ISerializableScraperSettings scraperSettings) : base(new Key(scraperSettings.ScraperType.ToString()))
-    {
-        ScraperSettings = scraperSettings;
-    }
-
-    public static async Task<SerializableScraperBase> FromJsonAsync(
-        string filePath, 
-        Func<ISerializableScraperSettings, SerializableScraperBase> createScraper)
-    {
-        // Deserialize the settings from the JSON file
-        var settings = await JsonScraperFactory.CreateFromJsonAsync(filePath);
-
-        // Use the factory delegate to create the scraper
-        return createScraper(settings);
+        Key Key { get; set; }
+        IScraperSettings ScraperSettings { get; set; }
+        Task<object> ScrapeAsync();
     }
     
+
+    /// <summary>
+    /// Base class for scrapers with a specific result type.
+    /// </summary>
+    public interface  IScraper<T>: IScraper where T: class
+    {
+        //public Key Key { get; set; }
+        //public IScraperSettings ScraperSettings { get; set; }
+        
+        /// <summary>
+        /// Asynchronously performs the scraping operation and returns a result of type <typeparamref name="TResult"/>.
+        /// </summary>
+        Task<ScrapingResult<T>> ScrapeAsync();
+    }
 }

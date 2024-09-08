@@ -1,77 +1,107 @@
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text.Json;
 using System.IO;
+using System.Reflection;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Willhaben.Domain.Models;
 using Willhaben.Domain.Settings;
 using Willhaben.Domain.StronglyTypedIds;
 using Willhaben.Scraper;
-using Willhaben.Scraper.Implementations.Willhaben;
+using Willhaben.Scraper.Implementations;
 
 public static class JsonScraperFactory
 {
-    
-    public static ISerializableScraperSettings CreateFromScraperType(ScraperType scraperType)
+    public static IScraperSettings CreateFromScraperType(ScraperType scraperType)
     {
         return scraperType switch
         {
             ScraperType.WILLHABEN => new WillhabenScraperSettings(),
-            ScraperType.EBAY => new WillhabenScraperSettings(),
+            ScraperType.EBAY => new WillhabenScraperSettings(), // Modify for specific settings if needed
             _ => throw new NotSupportedException($"Scraper type {scraperType} is not supported")
         };
     }
-    
 
-    public static async Task<ICollection<ISerializableScraperSettings>> LoadSettingsFromDirectoryAsync(
-        string dirname = @$"Settings/Scrapers")
+    public static async Task<ICollection<IScraperSettings>> LoadSettingsFromDirectoryAsync(string dirname = @"Settings/Scrapers")
     {
         if (!Directory.Exists(dirname))
         {
             throw new DirectoryNotFoundException($"{dirname} does not exist");
         }
-        var settings = new List<ISerializableScraperSettings>();
+        
+        var settings = new List<IScraperSettings>();
         foreach (var file in Directory.GetFiles(dirname))
         {
             if (file.EndsWith(".json"))
             {
-                var setting = await CreateFromJsonAsync(Path.Join(file));
+                var setting = await CreateFromJsonAsync(file);
                 settings.Add(setting);
             }
         }
         return settings;
     }
-    public static async Task<List<SerializableScraperBase>> LoadScrapersFromDirectoryAsync(
-        string dirname = @$"Settings/Scrapers")
+
+    public static async Task<List<IScraper>> LoadScrapersFromDirectoryAsync(string dirname = @"Settings/Scrapers")
     {
         if (!Directory.Exists(dirname))
         {
             throw new DirectoryNotFoundException($"{dirname} does not exist");
         }
-        var scrapers = new List<SerializableScraperBase>();
+        var scrapers = new List<IScraper>();
         foreach (var file in Directory.GetFiles(dirname))
         {
+
             if (file.EndsWith(".json"))
             {
-                var setting = await CreateFromJsonAsync(Path.Join(file));
-                var scraper = CreateFromSettings(setting);
-                scrapers.Add(scraper);
+
+                var settings = await CreateFromJsonAsync(file);
+
+                // Create the scraper instance
+                var scraper = CreateScraperFromSettings(settings);
+
+                if (scraper != null)
+                {
+                    scrapers.Add(scraper);
+                }
+                else
+                {
+                    Console.WriteLine("Failed to create scraper");
+                }
             }
         }
         return scrapers;
     }
+        
 
-    public static SerializableScraperBase CreateFromSettings(
-        ISerializableScraperSettings settings)
+    // Method to create scraper from settings and type
+    private static IScraper CreateScraperFromSettings(IScraperSettings settings)
     {
         return settings switch
         {
-           WillhabenScraperSettings willhabenScraperSettings => new WillhabenScraper(willhabenScraperSettings),
+            WillhabenScraperSettings willhabenScraperSettings =>
+                new WillhabenScraper(willhabenScraperSettings),
             _ => throw new NotSupportedException($"Scraper settings type {settings.GetType()} is not supported")
         };
     }
 
-    
-    public static async Task<ISerializableScraperSettings> CreateFromJsonAsync(string filePath)
+
+    // Method to get the correct scraper type based on the ScraperType enum
+    private static Type GetScraperType(ScraperType scraperType)
+    {
+        switch (scraperType)
+        {
+            case ScraperType.WILLHABEN:
+                return typeof(WillhabenScraper);
+            case ScraperType.EBAY:
+                // Replace with actual eBay scraper type
+                return typeof(WillhabenScraper); // Assuming you have an EbayScraper class
+            default:
+                throw new NotSupportedException($"Scraper type {scraperType} is not supported");
+        }
+    }
+
+    public static async Task<IScraperSettings> CreateFromJsonAsync(string filePath)
     {
         if (string.IsNullOrEmpty(filePath))
         {
@@ -85,6 +115,7 @@ public static class JsonScraperFactory
 
         using (var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read))
         {
+
             var document = await JsonDocument.ParseAsync(fileStream);
             var root = document.RootElement;
 
@@ -92,7 +123,6 @@ public static class JsonScraperFactory
             {
                 throw new JsonException("The JSON file does not contain a 'ScraperType' property.");
             }
-
             var scraperType = (ScraperType)scraperTypeElement.GetInt32();
 
             return scraperType switch

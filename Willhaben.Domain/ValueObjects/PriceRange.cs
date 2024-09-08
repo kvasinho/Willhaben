@@ -4,8 +4,8 @@ namespace Willhaben.Domain.Models;
 
 public class PriceRange
 {
-    public int? PriceFrom { get; private set; }
-    public int? PriceTo { get; private set; }
+    public int? PriceFrom { get;  set; }
+    public int? PriceTo { get;  set; }
 
     public void SetPriceFrom(int priceFrom)
     {
@@ -60,10 +60,5 @@ public class PriceRange
 
         return true;
     }
-
-    public void SetAsGiveAway()
-    {
-        PriceTo = 0;
-        PriceFrom = 0;
-    }
+    
 }

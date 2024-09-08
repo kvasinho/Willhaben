@@ -8,10 +8,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.VisualBasic;
 using Willhaben.Domain.Settings;
-using Willhaben.Domain.StronglyTypedIds;
 using Willhaben.Domain.Utils;
-using Willhaben.Domain.Utils.Converters;
-using Willhaben.Presentation.Commands;
+
 
 namespace Willhaben.Presentation.Commands;
 
@@ -32,12 +30,14 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
         if (jsonSettings is WillhabenScraperSettings willhaben)
         {
             ExplainKeywords();
-
-            willhaben.FuzzyKeywords = PromptForKeywords<FuzzyKeyword>("fuzzy");
-            willhaben.ExactKeywords = PromptForKeywords<ExactKeyword>("exact");
-            willhaben.OmitKeywords = PromptForKeywords<OmitKeyword>("omitted");
+            var keywords = new List<Keyword>();
+            willhaben.AddFuzzyKeywords(PromptForKeywords<FuzzyKeyword>("fuzzy"));
+            willhaben.AddExactKeywords(PromptForKeywords<ExactKeyword>("exact"));
+            willhaben.AddOmitKeywords(PromptForKeywords<OmitKeyword>("omitted"));
             
-            willhaben.AsPresentOnly =  PromptForOnlyPresent();
+            var asPresent  = PromptForOnlyPresent();
+            willhaben.AsPresentOnly = asPresent;
+            Console.WriteLine(asPresent);
             
             if (willhaben.AsPresentOnly == false)
             {
@@ -57,7 +57,6 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                     }
                     else
                     {
-                        willhaben.AsPresentOnly = true;
                         isQueryingPrice = false;
                     }
                 }
@@ -76,11 +75,12 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
             willhaben.Handover = PromptForHandover();
             willhaben.Rows = PromptForInteger("How many items do you want to scrape? Default: 100",
                 i => i > 0 && i <= 200, 100);
-            willhaben.ScrapingScheduleSettings.Days = PromptForDays().ToList();
-            willhaben.ScrapingScheduleSettings.From = PromptForTime("At what time should the scraper start:", TimeOnly.MinValue, willhaben.ScrapingScheduleSettings.IsValidTimeFrom);
-            willhaben.ScrapingScheduleSettings.To = PromptForTime("At what time should the scraper end:", TimeOnly.MaxValue, willhaben.ScrapingScheduleSettings.IsValidTimeTo);
+            willhaben.ScrapingScheduleSettings.Days = PromptForDays();
+            willhaben.ScrapingScheduleSettings.From = PromptForTime("At what time should the scraper start:", UTCTime.FromLocalMinTime(), willhaben.ScrapingScheduleSettings.IsValidTimeFrom);
+            willhaben.ScrapingScheduleSettings.To = PromptForTime("At what time should the scraper end:", UTCTime.FromLocalMaxTime(), willhaben.ScrapingScheduleSettings.IsValidTimeTo);
             willhaben.ScrapingScheduleSettings.Interval = PromptForInterval();
             
+            Console.WriteLine(willhaben.AsPresentOnly);
             await willhaben.ToJsonAsync();
         }
 
@@ -227,23 +227,23 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 Location.EISENSTADT,
                 Location.RUST,
                 Location.EISENSTADT_UMGEBUNG,
-                Location.GUESSING,
+                Location.GÜSSING,
                 Location.JENNERSDORF,
                 Location.MATTERSBURG,
-                Location.NEUSIEDL,
+                Location.NEUSIEDL_AM_SEE,
                 Location.OBERPULLENDORF,
                 Location.OBERWART
             })
-            .AddChoiceGroup(Location.KAERNTEN, new List<Location>
+            .AddChoiceGroup(Location.KÄRNTEN, new List<Location>
             {
                 Location.KLAGENFURT,
                 Location.VILLACH,
                 Location.FELDKIRCHEN,
                 Location.KLAGENFURT_LAND,
-                Location.SANKT_VEIT,
+                Location.SANKT_VEIT_AN_DER_GLAN,
                 Location.SPITTAL,
                 Location.VILLACH_LAND,
-                Location.VOELKERMARKT,
+                Location.VÖLKERMARKT,
                 Location.WOLFSBERG,
                 Location.HERMAGOR
             })
@@ -259,11 +259,11 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 Location.SALZBURG_STADT,
                 Location.HALLEIN,
                 Location.SALZBURG_UMGEBUNG,
-                Location.ST_JOHANN,
+                Location.SANKT_JOHANN_IM_PONGAU,
                 Location.TAMSWEG,
                 Location.ZELL_AM_SEE
             })
-            .AddChoiceGroup(Location.OBEROESTERREICH, new List<Location>()
+            .AddChoiceGroup(Location.OBERÖSTERREICH, new List<Location>()
             {
                 Location.LINZ,
                 Location.STEYR,
@@ -274,15 +274,15 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 Location.GMUNDEN,
                 Location.GRIESKIRCHEN,
                 Location.KIRCHDORF_AN_DER_KREMS,
-                Location.LINZ_LAND ,
+                Location.LINZ_LAND,
                 Location.PERG,
-                Location.RIED,
+                Location.RIED_IM_INNKREIS,
                 Location.ROHRBACH,
-                Location.SCHAERDING,
+                Location.SCHÄRDING,
                 Location.STEYR_LAND,
                 Location.URFAHR_UMGEBUNG,
-                Location.VOECKLABRUCK,
-                Location.WELS_LAND ,
+                Location.VÖCKLABRUCK,
+                Location.WELS_LAND,
             })
             .AddChoiceGroup(Location.STEIERMARK, new List<Location>()
             {
@@ -294,23 +294,23 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 Location.LIETZEN,
                 Location.MURAU,
                 Location.VOITSBERG,
-                Location.WEITZ,
+                Location.WEIZ,
                 Location.MURTAL,
-                Location.BRUCK_MUERZZUSCHLAG,
-                Location.HARTBERG_FUERSTENFELD,
-                Location.SUEDOSTSTEIERMARK,
+                Location.BRUCK_MÜRZZUSCHLAG,
+                Location.HARTBERG_FÜRSTENFELD,
+                Location.SÜDOSTSTEIERMARK,
             })
-            .AddChoiceGroup(Location.NIEDEROESTERREICH, new List<Location>()
+            .AddChoiceGroup(Location.NIEDERÖSTERREICH, new List<Location>()
             {
-                Location.KREMS_AN_DER_DONAU ,
-                Location.SANKT_POELTEN ,
+                Location.KREMS_AN_DER_DONAU,
+                Location.SANKT_PÖLTEN,
                 Location.WAIDHOFEN_AN_DER_YBBS,
-                Location.WIENER_NEUSTADT ,
-                Location.AMSTETTEN ,
-                Location.BADEN ,
+                Location.WIENER_NEUSTADT,
+                Location.AMSTETTEN,
+                Location.BADEN,
                 Location.BRUCK_AN_DER_LEITHA,
-                Location.GAENSERDORF,
-                Location.GMUEND,
+                Location.GÄNSERNDORF,
+                Location.GMÜND,
                 Location.HOLLABRUNN,
                 Location.HORN,
                 Location.KORNEUBURG,
@@ -318,9 +318,9 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 Location.LILIENFELD,
                 Location.MELK,
                 Location.MISTELBACH,
-                Location.MOEDLING,
+                Location.MÖDLING,
                 Location.NEUNKIRCHEN,
-                Location.SANKT_POELTEN_LAND,
+                Location.SANKT_PÖLTEN_LAND,
                 Location.SCHEIBBS,
                 Location.TULLN,
                 Location.WAIDHOFEN_AN_DER_THAYA,
@@ -332,16 +332,17 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 Location.INNSBRUCK,
                 Location.IMST,
                 Location.INNSBRUCK_LAND,
-                Location.KITZBUEHEL,
+                Location.KITZBÜHEL,
                 Location.KUFSTEIN,
                 Location.LANDECK,
                 Location.LIENZ,
                 Location.REUTTE,
                 Location.SCHWAZ,
-            });
+            })
+            .AddChoiceGroup(Location.ANDERE_LÄNDER, EnumExtensions.GetAllValuesBetween<Location>(-200, -2));
 
         var collection = new LocationCollection();
-        collection.FromList(AnsiConsole.Prompt(prompt));
+        collection.SetValues(AnsiConsole.Prompt(prompt));
         return collection;
     }
 
@@ -374,7 +375,7 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
         return choice;
     }
 
-    private TimeOnly PromptForTime(string prompt, TimeOnly defaultValue, Func<TimeOnly, bool> validation)
+    private UTCTime PromptForTime(string prompt, UTCTime defaultValue, Func<UTCTime, bool> validation)
     {
         while (true)
         {
@@ -389,17 +390,21 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 return defaultValue;
             }
 
-            if (TimeOnly.TryParse(input, out TimeOnly result))
+            if (TimeOnly.TryParse(input, out TimeOnly localTimeOnly))
             {
-                if (validation(result))
+                // Convert the TimeOnly result to UTCTime
+                UTCTime utcTime = new UTCTime(localTimeOnly, isUtc: false); 
+            
+                if (validation(utcTime))
                 {
-                    return result;
+                    return utcTime;
                 }
             }
 
             AnsiConsole.MarkupLine("[red]Invalid input. Please enter a valid time in the format: HH:mm.[/]");
         }
     }
+
 
     private bool PromptForPaylivery()
     {
@@ -427,7 +432,7 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 State.AUSSTELLUNGSSTÜCK,
             });
         var collection = new StateCollection();
-        collection.FromList(AnsiConsole.Prompt(prompt));
+        collection.SetValues(AnsiConsole.Prompt(prompt));
         return collection;
     }
     private DayOfWeekCollection PromptForDays()
@@ -446,10 +451,10 @@ public  class CreateCommandNoOptions : AsyncCommand<CreateCommandNoOptions.Setti
                 DayOfWeek.Friday,
                 DayOfWeek.Saturday,
                 DayOfWeek.Sunday,
-
             });
         var collection = new DayOfWeekCollection();
-        collection.FromList(AnsiConsole.Prompt(prompt));
+        var answers = AnsiConsole.Prompt(prompt);
+        collection.SetValues(answers.Any() ? answers : EnumExtensions.GetAllValues<DayOfWeek>());
         return collection;
     }
     private List<TKeyword> PromptForKeywords<TKeyword>(string keywordType) where TKeyword : Keyword

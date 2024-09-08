@@ -2,56 +2,67 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Willhaben.Domain.Exceptions;
 using Willhaben.Domain.Models;
-using DayOfWeek = System.DayOfWeek;
 
 namespace Willhaben.Domain.Utils.Converters;
-
-public class DayOfWeekJsonConverter : JsonConverter<List<DayOfWeek>>
-{
-    public override List<DayOfWeek> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+public class DayOfWeekCollectionConverter : JsonConverter<DayOfWeekCollection>
     {
-        if (reader.TokenType != JsonTokenType.StartArray)
+        public override DayOfWeekCollection Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new JsonException();
-        }
-
-        var days = new List<DayOfWeek>();
-
-        while (reader.Read())
-        {
-            if (reader.TokenType == JsonTokenType.EndArray)
+            if (reader.TokenType != JsonTokenType.StartArray)
             {
-                return days;
+                throw new JsonException("Expected start of array.");
             }
 
-            if (reader.TokenType == JsonTokenType.String)
-            {
-                string day = reader.GetString();
-                if (Enum.TryParse<DayOfWeek>(day, true, out var dayEnum))
-                {
-                    if (days.Any(d => d.Equals(dayEnum)))
-                    {
-                        throw new EnumKeyExistsException<DayOfWeek>(dayEnum);
-                    }
+            var days = new List<DayOfWeek>();
 
-                    days.Add(dayEnum);
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndArray)
+                {
+                    var collection = new DayOfWeekCollection();
+                    collection.SetSimplifiedValues(days);
+                    return collection;
+                }
+
+                if (reader.TokenType == JsonTokenType.Number)
+                {
+                    if (reader.TryGetInt32(out int dayOfWeekValue))
+                    {
+                        if (Enum.IsDefined(typeof(DayOfWeek), dayOfWeekValue))
+                        {
+                            var day = (DayOfWeek)dayOfWeekValue;
+                            if (days.Contains(day))
+                            {
+                                throw new EnumKeyExistsException<DayOfWeek>(day);
+                            }
+                            days.Add(day);
+                        }
+                        else
+                        {
+                            throw new StringEnumConversionException($"Invalid DayOfWeek value: {dayOfWeekValue}");
+                        }
+                    }
+                    else
+                    {
+                        throw new JsonException($"Expected integer value for DayOFWeek.");
+                    }
                 }
                 else
                 {
-                    throw new StringEnumConversionException(day ?? "day");
+                    throw new JsonException($"Unexpected token type: {reader.TokenType}");
                 }
             }
+
+            throw new JsonException("Unexpected end of array.");
         }
 
-        throw new JsonException();
-    }
-    public override void Write(Utf8JsonWriter writer, List<DayOfWeek> days, JsonSerializerOptions options)
-    {
-        writer.WriteStartArray();
-        foreach (var dayOfWeek in days)
+        public override void Write(Utf8JsonWriter writer, DayOfWeekCollection dayOfWeekCollection, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(dayOfWeek.ToString());
+            writer.WriteStartArray();
+            foreach (var dayOfWeek in dayOfWeekCollection.SimplifiedValues)
+            {
+                writer.WriteNumberValue((int)dayOfWeek);
+            }
+            writer.WriteEndArray();
         }
-        writer.WriteEndArray();
     }
-}

@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "Willhaben.JsonScraper/1.0.0": {
+        "runtime": {
+          "Willhaben.JsonScraper.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Willhaben.JsonScraper/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

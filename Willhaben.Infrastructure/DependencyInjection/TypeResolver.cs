@@ -3,30 +3,17 @@ using Spectre.Console.Cli;
 
 namespace Willhaben.Infrastructure.DependencyInjection;
 
-public sealed class TypeResolver : ITypeResolver, IDisposable
+public sealed class TypeResolver : ITypeResolver
 {
     private readonly IServiceProvider _provider;
 
     public TypeResolver(IServiceProvider provider)
     {
-        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+        _provider = provider;
     }
 
     public object Resolve(Type type)
     {
-        if (type == null)
-        {
-            return null;
-        }
-
         return _provider.GetService(type);
-    }
-
-    public void Dispose()
-    {
-        if (_provider is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
     }
 }

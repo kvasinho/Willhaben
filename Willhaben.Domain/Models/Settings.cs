@@ -32,7 +32,7 @@ public class Settings
     [JsonConverter(typeof(IntervalJsonConverter))]
     public Interval Interval { get; set; } = Interval.M5;
 
-    [JsonConverter(typeof(DayOfWeekJsonConverter))]
+    //[JsonConverter(typeof(DayOfWeekJsonConverter))]
     public List<DayOfWeek> Days { get; set; } = new();
     
     public TimeOnly From { get; set; }

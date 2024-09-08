@@ -13,7 +13,6 @@
           "Spectre.Console.Cli": "0.49.1",
           "Willhaben.Domain": "1.0.0",
           "Willhaben.Infrastructure": "1.0.0",
-          "Willhaben.JsonScraper": "1.0.0",
           "Willhaben.Manager": "1.0.0",
           "Willhaben.Scraper": "1.0.0"
         },
@@ -518,11 +517,6 @@
           "Willhaben.Infrastructure.dll": {}
         }
       },
-      "Willhaben.JsonScraper/1.0.0": {
-        "runtime": {
-          "Willhaben.JsonScraper.dll": {}
-        }
-      },
       "Willhaben.Manager/1.0.0": {
         "dependencies": {
           "MediatR": "12.4.0",
@@ -813,11 +807,6 @@
       "sha512": ""
     },
     "Willhaben.Infrastructure/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Willhaben.JsonScraper/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Willhaben.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+859659467ae826649c9a126e91f5b16dee1cb618")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a3f5fbe25ef2076246d8bb2179d275c011de8461")]
 [assembly: System.Reflection.AssemblyProductAttribute("Willhaben.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Willhaben.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

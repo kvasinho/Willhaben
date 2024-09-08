@@ -4,38 +4,47 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console.Cli;
 
 namespace Willhaben.Infrastructure.DependencyInjection;
-
 public sealed class TypeRegistrar : ITypeRegistrar
 {
-    private readonly IServiceCollection _builder;
+    private readonly IServiceCollection _services;
 
-    public TypeRegistrar(IServiceCollection builder)
+    public TypeRegistrar(IServiceCollection services)
     {
-        _builder = builder;
+        _services = services;
+    }
+
+    public void RegisterLazy(Type service, Func<object> factory)
+    {
+        _services.AddSingleton(service, provider => factory());
     }
 
     public ITypeResolver Build()
     {
-        return new TypeResolver(_builder.BuildServiceProvider());
+        return new TypeResolver(_services.BuildServiceProvider());
     }
 
     public void Register(Type service, Type implementation)
     {
-        _builder.AddSingleton(service, implementation);
+        _services.AddSingleton(service, implementation);
     }
 
     public void RegisterInstance(Type service, object implementation)
     {
-        _builder.AddSingleton(service, implementation);
+        _services.AddSingleton(service, implementation);
     }
 
-    public void RegisterLazy(Type service, Func<object> func)
+    public void Register(Type service, Func<object> factory)
     {
-        if (func is null)
-        {
-            throw new ArgumentNullException(nameof(func));
-        }
+        _services.AddSingleton(service, _ => factory());
+    }
 
-        _builder.AddSingleton(service, (provider) => func());
+    // Add RegisterLazy method
+    public void RegisterLazy(Type service, Func<ITypeResolver, object> factory)
+    {
+        _services.AddSingleton(service, provider =>
+        {
+            var resolver = new TypeResolver(provider);
+            return factory(resolver);
+        });
     }
 }

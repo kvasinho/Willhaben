@@ -23,13 +23,14 @@
     <ItemGroup>
       <ProjectReference Include="..\Willhaben.Domain\Willhaben.Domain.csproj" />
       <ProjectReference Include="..\Willhaben.Infrastructure\Willhaben.Infrastructure.csproj" />
-      <ProjectReference Include="..\Willhaben.JsonScraper\Willhaben.JsonScraper.csproj" />
       <ProjectReference Include="..\Willhaben.Manager\Willhaben.Manager.csproj" />
       <ProjectReference Include="..\Willhaben.Scraper\Willhaben.Scraper.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Settings\Global\" />
+      <Folder Include="Settings\Logs\" />
+      <Folder Include="Settings\Scrapers\" />
     </ItemGroup>
 
 </Project>

@@ -1,0 +1,13 @@
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/bin/Debug/net8.0/Willhaben.Infrastructure.deps.json
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/bin/Debug/net8.0/Willhaben.Infrastructure.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/bin/Debug/net8.0/Willhaben.Infrastructure.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.csproj.AssemblyReference.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.AssemblyInfoInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.AssemblyInfo.cs
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.sourcelink.json
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/refint/Willhaben.Infrastructure.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/Willhaben.Infrastructure.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.Infrastructure/obj/Debug/net8.0/ref/Willhaben.Infrastructure.dll

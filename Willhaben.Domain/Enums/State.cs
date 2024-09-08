@@ -16,63 +16,115 @@ namespace Willhaben.Domain.Models
         AUSSTELLUNGSSTÜCK = 2539,
     }
 
-    public abstract class SimplifyableEnumCollection<Tenum> where Tenum : Enum
+    public class SimplifyableEnumCollection<TEnum> where TEnum : Enum
     {
-        private List<Tenum> _values;
-        private List<Tenum> _simplifiedValues;
-
-        public IReadOnlyList<Tenum> Values => _values.AsReadOnly();
-        public IReadOnlyList<Tenum> SimplifiedValues => _simplifiedValues.AsReadOnly();
-
-        protected SimplifyableEnumCollection()
+        private List<TEnum> _values;
+        public List<TEnum> Values => _values;
+        public List<TEnum> SimplifiedValues => Simplyfy();
+    
+        public virtual List<TEnum> Expand(IEnumerable<TEnum> simplifiedValues)
         {
-            _values = new List<Tenum>();
-            _simplifiedValues = new List<Tenum>();
+            //If it contains zero elements -> 
+            return simplifiedValues.Any() ? EnumExtensions.GetAllValues<TEnum>() : simplifiedValues.ToList();
+        }
+        public virtual List<TEnum> Simplyfy()
+        {
+            //If all values are included in _values -> return an empty array.
+            return _values.ContainsAllEnumValues() ? new List<TEnum>() : _values.ToList();
         }
 
-        // Abstract methods to be implemented in derived classes
-        public virtual IReadOnlyList<Tenum> Simplyfy(IEnumerable<Tenum> values)
+        public void SetSimplifiedValues(List<TEnum> enums)
         {
-            return values.ContainsAllEnumValues() ? new List<Tenum>() : Values;
-        }
-        public virtual IReadOnlyList<Tenum> Expand(IEnumerable<Tenum> values)
-        {
-            return values.Any() ? EnumExtensions.GetAllValues<Tenum>() : Values;
+            //Use this one when reading from json since they are simplified there.
+            _values = enums.Count == 0 ? EnumExtensions.GetAllValues<TEnum>() : enums.ToList();
         }
 
-        public void AddUnique(Tenum value)
+        public void SetValues(ICollection<TEnum> enums)
+        {
+            _values = enums.ToList();
+        }
+        
+        public void AddUnique(TEnum value)
         {
             if (_values.Contains(value))
             {
                 throw new InvalidOperationException($"The value '{value}' already exists.");
             }
-
             _values.Add(value);
-            UpdateSimplifiedValues();
         }
+    }
+    /*
+    public abstract class T<Tenum> where Tenum : Enum
+    {
+        private List<Tenum> _values;
+    private List<Tenum> _simplifiedValues;
+    private bool _isUpdating = false;  // Guard flag to prevent recursion
 
-        public void Remove(Tenum value)
-        {
-            if (_values.Remove(value))
-            {
-                UpdateSimplifiedValues();
-            }
-            else
-            {
-                throw new InvalidOperationException($"The value '{value}' does not exist.");
-            }
-        }
+    public IReadOnlyList<Tenum> Values => _values.AsReadOnly();
+    public IReadOnlyList<Tenum> SimplifiedValues => _simplifiedValues.AsReadOnly();
 
-        public void SetSimplifiedValues(IEnumerable<Tenum> simplifiedValues)
+    protected SimplifyableEnumCollection()
+    {
+        _values = new List<Tenum>();
+        _simplifiedValues = new List<Tenum>();
+    }
+
+    public void SetSimplifiedValues(IEnumerable<Tenum> simplifiedValues)
+    {
+        if (_isUpdating) return; // Prevent recursion
+
+        _isUpdating = true;
+        try
         {
+            // Set simplified values directly and update _values based on Expand
             _simplifiedValues = simplifiedValues.ToList();
             _values = Expand(_simplifiedValues).ToList();
         }
-
-        private void UpdateSimplifiedValues()
+        finally
         {
-            _simplifiedValues = Simplyfy(_values).ToList();
+            _isUpdating = false;
         }
+    }
+
+    public virtual IReadOnlyList<Tenum> Simplyfy(IEnumerable<Tenum> values)
+    {
+        // Default simplification logic
+        return values.ContainsAllEnumValues() ? new List<Tenum>() : values.ToList();
+    }
+
+    public virtual IReadOnlyList<Tenum> Expand(IEnumerable<Tenum> simplifiedValues)
+    {
+        // Default expansion logic
+        return simplifiedValues.Any() ? EnumExtensions.GetAllValues<Tenum>() : simplifiedValues.ToList();
+    }
+
+    private void UpdateSimplifiedValues()
+    {
+        if (_isUpdating) return; // Avoid recursive updates
+        _simplifiedValues = Simplyfy(_values).ToList();
+    }
+
+    public void AddUnique(Tenum value)
+    {
+        if (_values.Contains(value))
+        {
+            throw new InvalidOperationException($"The value '{value}' already exists.");
+        }
+        _values.Add(value);
+        UpdateSimplifiedValues();
+    }
+
+    public void Remove(Tenum value)
+    {
+        if (_values.Remove(value))
+        {
+            UpdateSimplifiedValues();
+        }
+        else
+        {
+            throw new InvalidOperationException($"The value '{value}' does not exist.");
+        }
+    }
         
         public  void FromArray(Tenum[] values)
         {
@@ -100,189 +152,86 @@ namespace Willhaben.Domain.Models
             return SimplifiedValues.ToList();
         }
     }
+    */
 
-    public class StateCollection: SimplifyableEnumCollection<State>
-    {
-        /*
-        public override IReadOnlyList<State> Simplyfy(IEnumerable<State> values)
-        {
-            return values.ContainsAllEnumValues() ? new List<State>() : Values;
-        }
-        public override IReadOnlyList<State> Expand(IEnumerable<State> values)
-        {
-            return values.Any() ? EnumExtensions.GetAllValues<State>() : Values;
-        }
-        */
-    }
+    public class StateCollection: SimplifyableEnumCollection<State> { }
     
-    public class DayOfWeekCollection: SimplifyableEnumCollection<DayOfWeek>
-    {
-        /*
-        public override IReadOnlyList<DayOfWeek> Simplyfy(IEnumerable<DayOfWeek> values)
-        {
-            return values.ContainsAllEnumValues() ? new List<DayOfWeek>() : Values;
-        }
-        public override IReadOnlyList<DayOfWeek> Expand(IEnumerable<DayOfWeek> values)
-        {
-            return values.Any() ? EnumExtensions.GetAllValues<DayOfWeek>() : Values;
-        }
-        */
-    }
+    public class DayOfWeekCollection: SimplifyableEnumCollection<DayOfWeek> { }
 
     public class LocationCollection : SimplifyableEnumCollection<Location>
     {
-        public override IReadOnlyList<Location> Simplyfy(IEnumerable<Location> values)
+        private static void SimplifyLocationValues(
+            List<Location> simplifiedLocations, 
+            List<Location> locations,
+            Location region,
+            int startRange,
+            int endRange
+            )
         {
-            var simplifiedValeus = new List<Location>();
-            if (values.ContainsAllEnumValuesFromRange(117223, 117245))
+            var locationsInRange = locations.GetAllValuesBetween(startRange, endRange);
+            if (locations.ContainsAllEnumValuesFromRange(startRange, endRange))
             {
-                simplifiedValeus.Add(Location.WIEN);
+                simplifiedLocations.Add(region);
+            }
+            else if(locations.Contains(region))
+            {
+                simplifiedLocations.Add(region);
             }
             else
             {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(117223,117245));
+                simplifiedLocations.AddRange(locationsInRange);
             }
-            
-            if (values.ContainsAllEnumValuesFromRange(100, 199))
-            {
-                simplifiedValeus.Add(Location.BURGENLAND);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(100,199));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(200, 299))
-            {
-                simplifiedValeus.Add(Location.KAERNTEN);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(200,299));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(300, 399))
-            {
-                simplifiedValeus.Add(Location.NIEDEROESTERREICH);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(300,399));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(400, 499))
-            {
-                simplifiedValeus.Add(Location.OBEROESTERREICH);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(400,499));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(500, 599))
-            {
-                simplifiedValeus.Add(Location.SALZBURG);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(500,599));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(600, 699))
-            {
-                simplifiedValeus.Add(Location.STEIERMARK);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(600,699));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(700, 799))
-            {
-                simplifiedValeus.Add(Location.TIROL);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(700,799));
-            }
-            
-            if (values.ContainsAllEnumValuesFromRange(800, 899))
-            {
-                simplifiedValeus.Add(Location.VORARLBERG);
-            }
-            else
-            {
-                simplifiedValeus.AddRange(values.GetAllValuesBetween(800,899));
-            }
-
-            return simplifiedValeus;
-
         }
 
-        public override IReadOnlyList<Location> Expand(IEnumerable<Location> simplifiedValues)
+        public static void ExpandFromExistingRegion(
+            List<Location> expandedLocations, //the list to expand in 
+            List<Location> locations, //the original list
+            Location region,
+            int startRange,
+            int endRange
+        )
+        {
+            if (locations.Contains(region))
+            {
+                expandedLocations.AddRange(startRange,endRange);
+                locations.Remove(Location.WIEN);
+            }
+        }
+        public override List<Location> Simplyfy()
+        {
+            var simplifiedValues = new List<Location>();
+            SimplifyLocationValues(simplifiedValues, Values, Location.WIEN, 117223, 117245);
+            SimplifyLocationValues(simplifiedValues, Values, Location.BURGENLAND, 100, 199);
+            SimplifyLocationValues(simplifiedValues, Values, Location.KÄRNTEN, 200, 299);
+            SimplifyLocationValues(simplifiedValues, Values, Location.NIEDERÖSTERREICH, 300, 399);
+            SimplifyLocationValues(simplifiedValues, Values, Location.OBERÖSTERREICH, 400, 499);
+            SimplifyLocationValues(simplifiedValues, Values, Location.SALZBURG, 500, 599);
+            SimplifyLocationValues(simplifiedValues, Values, Location.STEIERMARK, 600, 699);
+            SimplifyLocationValues(simplifiedValues, Values, Location.TIROL, 700, 799);
+            SimplifyLocationValues(simplifiedValues, Values, Location.VORARLBERG, 800, 899);
+            SimplifyLocationValues(simplifiedValues, Values, Location.ANDERE_LÄNDER, -200, -2);
+
+            return simplifiedValues;
+        }
+        
+        public override List<Location> Expand(IEnumerable<Location> simplifiedValues)
         {
             var expanded = new List<Location>();
-            if (simplifiedValues.Contains(Location.WIEN))
-            {
-                expanded.AddRange(117223,117245);
-                simplifiedValues.Remove(Location.WIEN);
-            }
+            ExpandFromExistingRegion(expanded, Values, Location.WIEN, 117223,117245);
+            ExpandFromExistingRegion(expanded, Values, Location.BURGENLAND, 100,199);
+            ExpandFromExistingRegion(expanded, Values, Location.KÄRNTEN, 200,299);
+            ExpandFromExistingRegion(expanded, Values, Location.NIEDERÖSTERREICH, 300,399);
+            ExpandFromExistingRegion(expanded, Values, Location.OBERÖSTERREICH, 400,499);
+            ExpandFromExistingRegion(expanded, Values, Location.SALZBURG, 500,599);
+            ExpandFromExistingRegion(expanded, Values, Location.STEIERMARK, 600,699);
+            ExpandFromExistingRegion(expanded, Values, Location.TIROL, 700,799);
+            ExpandFromExistingRegion(expanded, Values, Location.VORARLBERG, 800,899);
+            ExpandFromExistingRegion(expanded, Values, Location.ANDERE_LÄNDER, -200,-2);
 
-            if (simplifiedValues.Contains(Location.BURGENLAND))
-            {
-                expanded.AddRange(100,199);
-                simplifiedValues.Remove(Location.BURGENLAND);
-
-            }
-
-            if (simplifiedValues.Contains(Location.KAERNTEN))
-            {
-                expanded.AddRange(200,299);
-                simplifiedValues.Remove(Location.KAERNTEN);
-
-            }
-            if (simplifiedValues.Contains(Location.NIEDEROESTERREICH))
-            {
-                expanded.AddRange(300,399);
-                simplifiedValues.Remove(Location.NIEDEROESTERREICH);
-
-            }
-            if (simplifiedValues.Contains(Location.OBEROESTERREICH))
-            {
-                expanded.AddRange(400,499);
-                simplifiedValues.Remove(Location.OBEROESTERREICH);
-
-            }
-            if (simplifiedValues.Contains(Location.SALZBURG))
-            {
-                expanded.AddRange(500,599);
-                simplifiedValues.Remove(Location.SALZBURG);
-
-            }            
-            if (simplifiedValues.Contains(Location.STEIERMARK))
-            {
-                expanded.AddRange(600,699);
-                simplifiedValues.Remove(Location.STEIERMARK);
-
-            }
-            if (simplifiedValues.Contains(Location.TIROL))
-            {
-                expanded.AddRange(700,799);
-                simplifiedValues.Remove(Location.TIROL);
-
-            }
-            if (simplifiedValues.Contains(Location.VORARLBERG))
-            {
-                expanded.AddRange(800,899);
-                simplifiedValues.Remove(Location.VORARLBERG);
-
-            }
-            
             foreach (var location in simplifiedValues)
             {
                 expanded.AddUniqueIgnoreDuplicates(location);
             }
-
             return expanded;
 
         }

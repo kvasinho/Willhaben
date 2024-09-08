@@ -1,0 +1,12 @@
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/bin/Debug/net8.0/Willhaben.JsonScraper.deps.json
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/bin/Debug/net8.0/Willhaben.JsonScraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/bin/Debug/net8.0/Willhaben.JsonScraper.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.GeneratedMSBuildEditorConfig.editorconfig
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.AssemblyInfoInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.AssemblyInfo.cs
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.csproj.CoreCompileInputs.cache
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.sourcelink.json
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/refint/Willhaben.JsonScraper.dll
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/Willhaben.JsonScraper.pdb
+/Users/michaelkvasin/csharp/Willhaben/Willhaben.JsonScraper/obj/Debug/net8.0/ref/Willhaben.JsonScraper.dll
